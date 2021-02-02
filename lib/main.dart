@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/Home.dart' as Home;
 import 'package:word_guesser_app/Fav.dart' as Fav;
-import 'package:word_guesser_app/dbhelp.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(primaryColor: Colors.black),
     home: MyApp(),
   ));
 }
@@ -17,15 +18,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   TabController tabController;
 
-  DbHelp dbHelp;
-
   @override
   void initState() {
     super.initState();
     tabController = new TabController(length: 2, vsync: this);
-
-    dbHelp = new DbHelp();
-    dbHelp.db;
   }
 
   @override
