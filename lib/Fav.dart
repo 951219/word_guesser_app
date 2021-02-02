@@ -22,6 +22,8 @@ class _FavTabState extends State<FavTab> {
     setState(() {
       isLoading = true;
     });
+
+    //TODO Change the url and add headers
     var url =
         "https://wgwebserver.herokuapp.com/testing/getinfowithuserid/123456";
     var response = await http.get(url);
