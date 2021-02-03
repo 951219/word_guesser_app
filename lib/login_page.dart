@@ -9,13 +9,12 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
-//TODO somehow check if the user is already logged in before showing the login page.
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  bool _isLoading = false;
+  // bool _isLoading = false;
 
   singIn(String username, String password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -33,9 +32,9 @@ class _LoginPageState extends State<LoginPage> {
       print("Response body: ${res.body}");
 
       if (jsonResponse != null) {
-        setState(() {
-          _isLoading = false;
-        });
+        // setState(() {
+        //   _isLoading = false;
+        // });
 
         sharedPreferences.setString(
             "refreshToken", jsonResponse['refreshToken']);
@@ -46,9 +45,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
             (Route<dynamic> route) => false);
       } else {
-        setState(() {
-          _isLoading = true;
-        });
+        // setState(() {
+        //   _isLoading = true;
+        // });
         print("Response status: ${res.body}");
       }
     } else {
@@ -121,9 +120,9 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text("Sing in",
                       style: TextStyle(fontSize: 32, color: Colors.white)),
                   onPressed: () {
-                    setState(() {
-                      _isLoading = true;
-                    });
+                    // setState(() {
+                    //   _isLoading = true;
+                    // });
                     singIn(_usernameController.text, _passwordController.text);
                   },
                 ),

@@ -18,6 +18,8 @@ Future<void> main() async {
 
   var refreshToken = sharedPreferences.getString('refreshToken');
   //TODO maybe use accesstoken instead and check if token is valid.
+  // use auth.dart for that. atm it only lets you log in if the token is present,
+  // but it does not check if it is valid
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
