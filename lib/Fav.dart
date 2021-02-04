@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FavTab extends StatefulWidget {
   @override
@@ -19,16 +21,19 @@ class _FavTabState extends State<FavTab> {
   }
 
   fetchUser() async {
-    setState(() {
-      isLoading = true;
-    });
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    // setState(() {
+    //   isLoading = true;
+    // });
 
-    //TODO Change the url and add headers
-    var url =
-        "https://wgwebserver.herokuapp.com/testing/getinfowithuserid/123456";
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var words = json.decode(response.body)['words'];
+    var url = "https://wgwebserver.herokuapp.com/user/getinfo";
+    var res = await http.get(url, headers: {
+      HttpHeaders.authorizationHeader:
+          "Bearer ${sharedPreferences.getString('accessToken')}"
+    });
+    if (res.statusCode == 200) {
+      var words = json.decode(res.body)['words'];
+      print(words);
       setState(() {
         listItems = words;
         isLoading = false;
@@ -36,7 +41,7 @@ class _FavTabState extends State<FavTab> {
     } else {
       setState(() {
         listItems = [];
-        isLoading = false;
+        isLoading = true;
       });
     }
   }
@@ -59,6 +64,8 @@ class _FavTabState extends State<FavTab> {
           valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
         ),
       );
+    } else if (listItems.length == 0) {
+      return Center(child: Text('You have 0 words'));
     } else {
       return ListView.builder(
           itemCount: listItems.length,

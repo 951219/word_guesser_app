@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:word_guesser_app/entry_page.dart';
 
+import 'auth/auth.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -123,6 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                     // setState(() {
                     //   _isLoading = true;
                     // });
+                    getNewAccessToken();
                     singIn(_usernameController.text, _passwordController.text);
                   },
                 ),
