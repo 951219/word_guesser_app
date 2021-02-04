@@ -15,7 +15,7 @@ class _HomeTabState extends State<HomeTab> {
   var definiton = "";
 
   _fetchWord(String word) async {
-    if (_wordFieldController.text != null || wordFieldController.text != "") {
+    if (_wordFieldController.text != null || _wordFieldController.text != "") {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       String url = 'https://wgwebserver.herokuapp.com/est/get/${word}';
