@@ -3,24 +3,30 @@ import 'package:http/http.dart' as http;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-void getNewAccessToken() async {
+// checks if refreshToken is valid, it it is then it will return a new accessToken and saves it in sharedprefs
+Future<bool> isLoggedIn() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String url = "https://wgwebserver.herokuapp.com/user/token";
+  var loggedIn;
+  if (sharedPreferences.containsKey("refreshToken")) {
+    String url = "https://wgwebserver.herokuapp.com/user/token";
+    Map body = {
+      "refreshToken": sharedPreferences.getString('refreshToken'),
+      "accessToken": sharedPreferences.getString('accessToken')
+    };
+    var response = await http.post(url, body: body);
 
-  Map body = {"token": sharedPreferences.getString('refreshToken')};
-
-  var jsonResponse;
-  var res = await http.post(url, body: body);
-
-  if (res.statusCode == 200) {
-    jsonResponse = json.decode(res.body);
-    print('in auth');
-    print(jsonResponse);
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      sharedPreferences.setString('accessToken', jsonResponse['accessToken']);
+      loggedIn = true;
+    } else {
+      print("statuscode: ${response.statusCode}");
+      sharedPreferences.clear();
+      loggedIn = false;
+    }
+  } else {
+    print("No refreshToken in sharedprefs");
+    loggedIn = false;
   }
-  //Check if the old token is still valid
-  //Get a new accessToken by passing refreshToken
+  return loggedIn;
 }
-
-// authenticateUser(){
-// If current token is not valid, ask for a new access token from API
-// }
