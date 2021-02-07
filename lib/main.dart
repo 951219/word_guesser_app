@@ -8,33 +8,32 @@ import 'package:http/http.dart' as http;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // TODO mode it to another file
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-  // TODO refactor
-// isLoggedIn =
-  var loggedIn = sharedPreferences.getBool('loggedIn');
-
-  if (loggedIn != null || loggedIn == true) {
-    print('User was logged in: $loggedIn');
+  var loggedIn;
+  if (sharedPreferences.containsKey("refreshToken")) {
+    String url = "https://wgwebserver.herokuapp.com/user/token";
     Map body = {
       "refreshToken": sharedPreferences.getString('refreshToken'),
       "accessToken": sharedPreferences.getString('accessToken')
     };
-
-    String url = "https://wgwebserver.herokuapp.com/user/token";
-
     var response = await http.post(url, body: body);
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
       sharedPreferences.setString('accessToken', jsonResponse['accessToken']);
+      loggedIn = true;
     } else {
+      print("statuscode: ${response.statusCode}");
       sharedPreferences.clear();
+      loggedIn = false;
     }
   } else {
-    print('User was not logged in: $loggedIn');
+    print("No refreshToken in sharedprefs");
     loggedIn = false;
   }
+
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,

@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:word_guesser_app/entry_page.dart';
 
-import 'auth/auth.dart';
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -16,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  // bool _isLoading = false;
+  bool _isLoading = false;
 
   singIn(String username, String password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -31,13 +29,8 @@ class _LoginPageState extends State<LoginPage> {
       jsonResponse = json.decode(res.body);
 
       print("Response status: ${res.statusCode}");
-      print("Response body: ${res.body}");
 
       if (jsonResponse != null) {
-        // setState(() {
-        //   _isLoading = false;
-        // });
-
         sharedPreferences.setString(
             "refreshToken", jsonResponse['refreshToken']);
         sharedPreferences.setString("accessToken", jsonResponse['accessToken']);
@@ -47,13 +40,19 @@ class _LoginPageState extends State<LoginPage> {
               builder: (BuildContext context) => EntryPage(),
             ),
             (Route<dynamic> route) => false);
+        setState(() {
+          _isLoading = false;
+        });
       } else {
-        // setState(() {
-        //   _isLoading = true;
-        // });
+        setState(() {
+          _isLoading = true;
+        });
         print("Response status: ${res.body}");
       }
     } else {
+      setState(() {
+        _isLoading = false;
+      });
       print("Error: Response status: ${res.statusCode}");
     }
   }
@@ -122,13 +121,16 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(16)),
                   child: Text("Sing in",
                       style: TextStyle(fontSize: 32, color: Colors.white)),
-                  onPressed: () {
-                    // setState(() {
-                    //   _isLoading = true;
-                    // });
-                    getNewAccessToken();
-                    singIn(_usernameController.text, _passwordController.text);
-                  },
+                  onPressed: _isLoading
+                      ? null
+                      : () {
+                          setState(() {
+                            _isLoading = true;
+                          });
+
+                          singIn(_usernameController.text,
+                              _passwordController.text);
+                        },
                 ),
               ),
               SizedBox(
