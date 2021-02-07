@@ -22,9 +22,9 @@ class _FavTabState extends State<FavTab> {
 
   fetchUser() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    // setState(() {
-    //   isLoading = true;
-    // });
+    setState(() {
+      isLoading = true;
+    });
 
     var url = "https://wgwebserver.herokuapp.com/user/getinfo";
     var res = await http.get(url, headers: {

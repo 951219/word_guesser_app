@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'auth/auth.dart';
+
 class HomeTab extends StatefulWidget {
   @override
   _HomeTabState createState() => _HomeTabState();
@@ -31,6 +33,10 @@ class _HomeTabState extends State<HomeTab> {
         setState(() {
           definiton = jsonResponse[0]['meaning'].toString();
         });
+      } else {
+        isLoggedIn();
+        // TODO look into it
+        _fetchWord(word);
       }
     } else {
       setState(() {
