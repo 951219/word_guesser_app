@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 void getNewAccessToken() async {
-  // TODO
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = "https://wgwebserver.herokuapp.com/user/token";
 

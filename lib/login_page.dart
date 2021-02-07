@@ -41,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         sharedPreferences.setString(
             "refreshToken", jsonResponse['refreshToken']);
         sharedPreferences.setString("accessToken", jsonResponse['accessToken']);
+        sharedPreferences.setBool('loggedIn', true);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (BuildContext context) => EntryPage(),
