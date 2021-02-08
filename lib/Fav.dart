@@ -98,6 +98,9 @@ class _FavTabState extends State<FavTab> {
               )
             ],
           ),
+          onTap: () {
+            // TODO Open up a modal to show a word details
+          },
         ),
       ),
     );

@@ -20,7 +20,7 @@ class _HomeTabState extends State<HomeTab> {
     if (_wordFieldController.text != null || _wordFieldController.text != "") {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
-      String url = 'https://wgwebserver.herokuapp.com/est/get/${word}';
+      String url = 'https://wgwebserver.herokuapp.com/est/get/$word';
 
       var jsonResponse;
       var res = await http.get(url, headers: {
@@ -35,7 +35,6 @@ class _HomeTabState extends State<HomeTab> {
         });
       } else {
         isLoggedIn();
-        // TODO look into it
         _fetchWord(word);
       }
     } else {
