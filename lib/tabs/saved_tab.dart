@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth/auth.dart';
+
 class SavedTab extends StatefulWidget {
   @override
   _SavedTabState createState() => _SavedTabState();
@@ -33,12 +35,18 @@ class _SavedTabState extends State<SavedTab> {
     });
     if (res.statusCode == 200) {
       var words = json.decode(res.body)['words'];
-      print(words);
+      print("Response status: ${res.statusCode} - Got the words");
       setState(() {
         listItems = words;
         isLoading = false;
       });
+    } else if (res.statusCode == 403) {
+      print(
+          "Response status: ${res.statusCode} - Sending a request to get a new access token");
+      await isLoggedIn();
+      fetchUser();
     } else {
+      print("Response status: ${res.statusCode}");
       setState(() {
         listItems = [];
         isLoading = true;
@@ -49,15 +57,12 @@ class _SavedTabState extends State<SavedTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My words'),
-        backgroundColor: Colors.cyan[700],
-      ),
       body: getBody(),
     );
   }
 
   Widget getBody() {
+    // If jwt expired, log out.
     if (listItems.contains(null) || listItems.length < 0 || isLoading) {
       return Center(
         child: CircularProgressIndicator(
