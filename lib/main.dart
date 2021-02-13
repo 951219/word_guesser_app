@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:word_guesser_app/entry_page.dart';
+import 'package:word_guesser_app/tab_frame.dart';
 import 'package:word_guesser_app/login_page.dart';
 
 import 'auth/auth.dart';

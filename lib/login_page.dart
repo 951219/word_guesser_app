@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:word_guesser_app/entry_page.dart';
+import 'package:word_guesser_app/tab_frame.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String url = "https://wgwebserver.herokuapp.com/user/login";
 
-    Map body = {"username": username, "password": password};
+    Map body = {"username": username.toLowerCase(), "password": password};
 
     var jsonResponse;
     var res = await http.post(url, body: body);

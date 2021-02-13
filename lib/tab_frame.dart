@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:word_guesser_app/home.dart' as home;
-import 'package:word_guesser_app/fav.dart' as fav;
+import 'package:word_guesser_app/tabs/search_tab.dart' as search;
+import 'package:word_guesser_app/tabs/saved_tab.dart' as saved;
+import 'package:word_guesser_app/tabs/guess_tab.dart' as guess;
 
 class EntryPage extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class _EntryPageState extends State<EntryPage>
   @override
   void initState() {
     super.initState();
-    tabController = new TabController(length: 2, vsync: this);
+    tabController = new TabController(length: 3, vsync: this);
   }
 
   @override
@@ -34,18 +35,18 @@ class _EntryPageState extends State<EntryPage>
           unselectedLabelColor: Colors.grey[400],
           labelColor: Colors.cyan[700],
           tabs: [
-            Tab(text: 'Home'),
-            Tab(
-              text: 'Fav',
-            ),
+            Tab(text: 'Guess'),
+            Tab(text: 'Search'),
+            Tab(text: 'Saved'),
           ],
         ),
       ),
       body: TabBarView(
         controller: tabController,
         children: [
-          home.HomeTab(),
-          fav.FavTab(),
+          guess.GuessTab(),
+          search.SearchTab(),
+          saved.SavedTab(),
         ],
       ),
     );

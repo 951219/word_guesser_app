@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FavTab extends StatefulWidget {
+class SavedTab extends StatefulWidget {
   @override
-  _FavTabState createState() => _FavTabState();
+  _SavedTabState createState() => _SavedTabState();
 }
 
-class _FavTabState extends State<FavTab> {
+class _SavedTabState extends State<SavedTab> {
   List listItems = [];
   bool isLoading = false;
 

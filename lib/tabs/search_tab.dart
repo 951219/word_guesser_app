@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'auth/auth.dart';
+import '../auth/auth.dart';
 
-class HomeTab extends StatefulWidget {
+class SearchTab extends StatefulWidget {
   @override
-  _HomeTabState createState() => _HomeTabState();
+  _SearchTabState createState() => _SearchTabState();
 }
 
-class _HomeTabState extends State<HomeTab> {
+class _SearchTabState extends State<SearchTab> {
   TextEditingController _wordFieldController = TextEditingController();
   var definiton = "";
 
@@ -34,6 +34,7 @@ class _HomeTabState extends State<HomeTab> {
           definiton = jsonResponse[0]['meaning'].toString();
         });
       } else {
+        // TODO debud - Starts spamming
         isLoggedIn();
         _fetchWord(word);
       }
