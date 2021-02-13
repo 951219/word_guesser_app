@@ -33,9 +33,13 @@ class _SearchTabState extends State<SearchTab> {
         setState(() {
           definiton = jsonResponse[0]['meaning'].toString();
         });
+      } else if (res.statusCode == 200) {
+        setState(() {
+          definiton = jsonResponse['message'];
+        });
       } else {
-        // TODO debud - Starts spamming
-        isLoggedIn();
+        // TODO debug - Starts spamming if the word does not exist
+        await isLoggedIn();
         _fetchWord(word);
       }
     } else {
