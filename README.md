@@ -1,16 +1,14 @@
-# word_guesser_app
+# Word Guesser App
 
-A new Flutter project.
+This app is a frontend for fhe WGwebserver
 
-## Getting Started
+## Additional information
 
-This project is a starting point for a Flutter application.
+Web server: https://github.com/karukenert/WGwebserver  
+Chrome extentsion: https://github.com/karukenert/WGCE  
+Flutter app: https://github.com/karukenert/word_guesser_app
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+History:  
+Second vesion as an android app: https://github.com/karukenert/DictionaryApp/  
+Fist version as a terminal program: https://github.com/karukenert/WordQuesser/  
