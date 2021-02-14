@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/auth.dart';
@@ -14,7 +15,7 @@ class SavedTab extends StatefulWidget {
 
 class _SavedTabState extends State<SavedTab> {
   List listItems = [];
-  bool isLoading = false;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -25,7 +26,7 @@ class _SavedTabState extends State<SavedTab> {
   fetchUser() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
 
     var url = "https://wgwebserver.herokuapp.com/user/getinfo";
@@ -38,7 +39,7 @@ class _SavedTabState extends State<SavedTab> {
       print("Response status: ${res.statusCode} - Got the words");
       setState(() {
         listItems = words;
-        isLoading = false;
+        _isLoading = false;
       });
     } else if (res.statusCode == 403) {
       print(
@@ -49,7 +50,7 @@ class _SavedTabState extends State<SavedTab> {
       print("Response status: ${res.statusCode}");
       setState(() {
         listItems = [];
-        isLoading = true;
+        _isLoading = true;
       });
     }
   }
@@ -63,7 +64,8 @@ class _SavedTabState extends State<SavedTab> {
 
   Widget getBody() {
     // If jwt expired, log out.
-    if (listItems.contains(null) || listItems.length < 0 || isLoading) {
+
+    if (_isLoading || listItems.contains(null) || listItems.length < 0) {
       return Center(
         child: CircularProgressIndicator(
           valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -104,7 +106,13 @@ class _SavedTabState extends State<SavedTab> {
             ],
           ),
           onTap: () {
-            // TODO Open up a modal to show a word details
+            showMaterialModalBottomSheet(
+              context: context,
+              builder: (context) => Container(
+                height: 500,
+                child: Center(child: Text(word)),
+              ),
+            );
           },
         ),
       ),
