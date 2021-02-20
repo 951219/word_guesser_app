@@ -8,7 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<bool> isLoggedIn() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   var loggedIn;
-  if (sharedPreferences.containsKey("refreshToken")) {
+  if (sharedPreferences.containsKey("refreshToken") &&
+      sharedPreferences.containsKey("accessToken")) {
     String url = "${constants.DOMAIN}/user/token";
     Map body = {
       "refreshToken": sharedPreferences.getString('refreshToken'),
@@ -26,7 +27,7 @@ Future<bool> isLoggedIn() async {
       loggedIn = false;
     }
   } else {
-    print("No refreshToken in sharedprefs");
+    print("No refreshToken/accessToken in sharedprefs");
     loggedIn = false;
   }
   return loggedIn;

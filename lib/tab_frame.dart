@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:word_guesser_app/tabs/search_tab.dart' as search;
 import 'package:word_guesser_app/tabs/saved_tab.dart' as saved;
 import 'package:word_guesser_app/tabs/guess_tab.dart' as guess;
+import 'login_page.dart';
+import 'user_services.dart';
 
 class EntryPage extends StatefulWidget {
   @override
@@ -22,6 +24,21 @@ class _EntryPageState extends State<EntryPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              icon: Icon(Icons.logout, color: Colors.black),
+              tooltip: 'Show Snackbar',
+              onPressed: () async {
+                var success = await logOut();
+                if (success) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => LoginPage(),
+                      ),
+                      (Route<dynamic> route) => false);
+                }
+              }),
+        ],
         elevation: 0.0,
         backgroundColor: Colors.white,
         title: Text(

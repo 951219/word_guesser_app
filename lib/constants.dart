@@ -1,2 +1,2 @@
 // TODO
-const String DOMAIN = "https://wgwebserver.herokuapp.com/";
+const String DOMAIN = "https://wgwebserver.herokuapp.com";
