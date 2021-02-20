@@ -2,12 +2,43 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:word_guesser_app/tab_frame.dart';
 import './constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_page.dart';
 
-logIn() {}
+Future<bool> singIn(
+    String username, String password, BuildContext context) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  String url = "${constants.DOMAIN}/user/login";
+
+  Map body = {"username": username.toLowerCase(), "password": password};
+
+  var jsonResponse;
+  var res = await http.post(url, body: body);
+
+  if (res.statusCode == 200) {
+    jsonResponse = json.decode(res.body);
+
+    print("Response status: ${res.statusCode}");
+
+    if (jsonResponse != null) {
+      sharedPreferences.setString("refreshToken", jsonResponse['refreshToken']);
+      sharedPreferences.setString("accessToken", jsonResponse['accessToken']);
+      sharedPreferences.setBool('loggedIn', true);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (BuildContext context) => EntryPage(),
+          ),
+          (Route<dynamic> route) => false);
+    } else {
+      print("Response status: ${res.body}");
+    }
+  } else {
+    print("Error: Response status: ${res.statusCode}");
+  }
+}
 
 Future<void> logOut(BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -31,6 +62,34 @@ Future<void> logOut(BuildContext context) async {
   }
 }
 
-validateTokenAndHttpGet(String url) {
-  // navigate to url, if token expired, fetch a new one.
+// checks if refreshToken is valid, it it is then it will return a new accessToken and saves it in sharedprefs
+Future<bool> syncIsLoggedIn() async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  var loggedIn;
+  if (sharedPreferences.containsKey("refreshToken") &&
+      sharedPreferences.containsKey("accessToken")) {
+    String url = "${constants.DOMAIN}/user/token";
+    Map body = {
+      "refreshToken": sharedPreferences.getString('refreshToken'),
+      "accessToken": sharedPreferences.getString('accessToken')
+    };
+    var response = await http.post(url, body: body);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      sharedPreferences.setString('accessToken', jsonResponse['accessToken']);
+      loggedIn = true;
+    } else if (response.statusCode == 403) {
+      print(
+          "Statuscode: ${response.statusCode} \n Forbidden: Your token is invalid");
+    } else {
+      print("Statuscode: ${response.statusCode}");
+      sharedPreferences.clear();
+      loggedIn = false;
+    }
+  } else {
+    print("No refreshToken/accessToken in sharedprefs");
+    loggedIn = false;
+  }
+  return loggedIn;
 }

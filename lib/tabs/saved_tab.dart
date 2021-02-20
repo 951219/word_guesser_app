@@ -6,8 +6,7 @@ import 'package:http/http.dart' as http;
 import '../constants.dart' as constants;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../auth/auth.dart';
+import '../user_services.dart';
 
 class SavedTab extends StatefulWidget {
   @override
@@ -46,7 +45,7 @@ class _SavedTabState extends State<SavedTab> {
     } else if (res.statusCode == 403) {
       print(
           "Response status: ${res.statusCode} - Sending a request to get a new access token");
-      await isLoggedIn();
+      await syncIsLoggedIn();
       fetchUser();
     } else {
       print("Response status: ${res.statusCode}");

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:word_guesser_app/user_services.dart';
 import './constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:word_guesser_app/tab_frame.dart';
@@ -16,47 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordController = TextEditingController();
 
   bool _isLoading = false;
-
-  singIn(String username, String password) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String url = "${constants.DOMAIN}/user/login";
-
-    Map body = {"username": username.toLowerCase(), "password": password};
-
-    var jsonResponse;
-    var res = await http.post(url, body: body);
-
-    if (res.statusCode == 200) {
-      jsonResponse = json.decode(res.body);
-
-      print("Response status: ${res.statusCode}");
-
-      if (jsonResponse != null) {
-        sharedPreferences.setString(
-            "refreshToken", jsonResponse['refreshToken']);
-        sharedPreferences.setString("accessToken", jsonResponse['accessToken']);
-        sharedPreferences.setBool('loggedIn', true);
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (BuildContext context) => EntryPage(),
-            ),
-            (Route<dynamic> route) => false);
-        setState(() {
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _isLoading = true;
-        });
-        print("Response status: ${res.body}");
-      }
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      print("Error: Response status: ${res.statusCode}");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                           });
 
                           singIn(_usernameController.text,
-                              _passwordController.text);
+                              _passwordController.text, context);
                         },
                 ),
               ),

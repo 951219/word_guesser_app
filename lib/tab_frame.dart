@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:word_guesser_app/tabs/search_tab.dart' as search;
 import 'package:word_guesser_app/tabs/saved_tab.dart' as saved;
 import 'package:word_guesser_app/tabs/guess_tab.dart' as guess;
-import 'login_page.dart';
 import 'user_services.dart';
 
 class EntryPage extends StatefulWidget {
@@ -35,7 +34,7 @@ class _EntryPageState extends State<EntryPage>
         elevation: 0.0,
         backgroundColor: Colors.white,
         title: Text(
-          'Dictionary',
+          'Word Guesser',
           style: TextStyle(color: Colors.black),
         ),
         bottom: TabBar(

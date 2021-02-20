@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/tab_frame.dart';
 import 'package:word_guesser_app/login_page.dart';
-
-import 'auth/auth.dart';
+import 'user_services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +11,7 @@ Future<void> main() async {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.black),
       home: FutureBuilder<bool>(
-        future: isLoggedIn(),
+        future: syncIsLoggedIn(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data == true) {

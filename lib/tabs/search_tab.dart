@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../auth/auth.dart';
+import '../user_services.dart';
 
 class SearchTab extends StatefulWidget {
   @override
@@ -41,7 +40,7 @@ class _SearchTabState extends State<SearchTab> {
         });
       } else {
         // TODO debug - Starts spamming if the word does not exist
-        await isLoggedIn();
+        await syncIsLoggedIn();
         _fetchWord(word);
       }
     } else {
