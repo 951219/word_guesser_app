@@ -119,7 +119,6 @@ fetchUser() async {
       fetchUser();
     } else {
       print("Response status: ${res.statusCode}");
-      return null;
     }
   } else {
     print(

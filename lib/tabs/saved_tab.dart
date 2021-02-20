@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:word_guesser_app/widgets/bottom_word_modal.dart';
 import '../user_services.dart';
+import '../word_services.dart';
 
 class SavedTab extends StatefulWidget {
   @override
@@ -8,40 +9,45 @@ class SavedTab extends StatefulWidget {
 }
 
 class _SavedTabState extends State<SavedTab> {
-  var user;
-
-  @override
-  initState() {
-    super.initState();
-    user = fetchUser();
-  }
-
-  bool _isLoading = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(),
+      body: FutureBuilder(
+        future: getBody(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return snapshot.data;
+          }
+        },
+      ),
     );
   }
 
-// TODO fix this
-  Widget getBody() {
+  Future<Widget> getBody() async {
+    var user = await fetchUser();
     List _listItems = user['words'];
-    if (_isLoading || _listItems.contains(null) || _listItems.length < 0) {
+
+    if (_listItems.contains(null) || _listItems.length < 0) {
       return Center(
         child: CircularProgressIndicator(
           valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
         ),
       );
     } else if (_listItems.length == 0) {
-      return Center(child: Text('You have 0 words'));
+      return Center(
+        child: Text('You have 0 words'),
+      );
     } else {
       return ListView.builder(
-          itemCount: _listItems.length,
-          itemBuilder: (context, index) {
-            return getCard(_listItems[index]);
-          });
+        itemCount: _listItems.length,
+        itemBuilder: (context, index) {
+          return getCard(_listItems[index]);
+        },
+      );
     }
   }
 
@@ -68,14 +74,9 @@ class _SavedTabState extends State<SavedTab> {
               )
             ],
           ),
-          onTap: () {
-            showMaterialModalBottomSheet(
-              context: context,
-              builder: (context) => Container(
-                height: 500,
-                child: Center(child: Text(word)),
-              ),
-            );
+          onTap: () async {
+            var wordObject = await fetchWord(word);
+            showBottomModal(context, wordObject);
           },
         ),
       ),
