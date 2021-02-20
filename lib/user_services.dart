@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_page.dart';
 
-Future<bool> singIn(
+Future<void> singIn(
     String username, String password, BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = "${constants.DOMAIN}/user/login";
@@ -77,14 +78,15 @@ Future<bool> syncIsLoggedIn() async {
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
-      sharedPreferences.setString('accessToken', jsonResponse['accessToken']);
+      print('Got a new token from the API');
+      sharedPreferences.setString("accessToken", jsonResponse['accessToken']);
       loggedIn = true;
     } else if (response.statusCode == 403) {
       print(
           "Statuscode: ${response.statusCode} \n Forbidden: Your token is invalid");
     } else {
       print("Statuscode: ${response.statusCode}");
-      sharedPreferences.clear();
+      //TODO await sharedPreferences.clear();
       loggedIn = false;
     }
   } else {
@@ -92,4 +94,35 @@ Future<bool> syncIsLoggedIn() async {
     loggedIn = false;
   }
   return loggedIn;
+}
+
+fetchUser() async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  // TODO If jwt expired, log out.
+  //TODO Starts looping if accesstoken is expired
+
+  if (sharedPreferences.containsKey("refreshToken") &&
+      sharedPreferences.containsKey("accessToken")) {
+    print('sharedPreferences contains both');
+    var url = "${constants.DOMAIN}/user/getinfo";
+    var res = await http.get(url, headers: {
+      HttpHeaders.authorizationHeader:
+          "Bearer ${sharedPreferences.getString('accessToken')}"
+    });
+    if (res.statusCode == 200) {
+      print("Response status: ${res.statusCode} - Got the user");
+      return json.decode(res.body);
+    } else if (res.statusCode == 403) {
+      print(
+          "Response status: ${res.statusCode} - Sending a request to get a new access token");
+      await syncIsLoggedIn();
+      fetchUser();
+    } else {
+      print("Response status: ${res.statusCode}");
+      return null;
+    }
+  } else {
+    print(
+        'sharedPreferences does not contain both: \n refresh: ${sharedPreferences.getString("refreshToken")} access: ${sharedPreferences.getString("accessToken")}');
+  }
 }

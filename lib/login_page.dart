@@ -84,14 +84,16 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(fontSize: 32, color: Colors.white)),
                   onPressed: _isLoading
                       ? null
-                      : () {
+                      : () async {
                           // TODO if a field is empty, show snackbar
                           setState(() {
                             _isLoading = true;
                           });
-
-                          singIn(_usernameController.text,
+                          await singIn(_usernameController.text,
                               _passwordController.text, context);
+                          setState(() {
+                            _isLoading = false;
+                          });
                         },
                 ),
               ),
