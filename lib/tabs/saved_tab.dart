@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../constants.dart' as constants;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,7 +30,7 @@ class _SavedTabState extends State<SavedTab> {
       _isLoading = true;
     });
 
-    var url = "https://wgwebserver.herokuapp.com/user/getinfo";
+    var url = "${constants.DOMAIN}/user/getinfo";
     var res = await http.get(url, headers: {
       HttpHeaders.authorizationHeader:
           "Bearer ${sharedPreferences.getString('accessToken')}"

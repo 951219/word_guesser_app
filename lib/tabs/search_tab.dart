@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/auth.dart';
@@ -20,7 +21,7 @@ class _SearchTabState extends State<SearchTab> {
     if (_wordFieldController.text != null || _wordFieldController.text != "") {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
-      String url = 'https://wgwebserver.herokuapp.com/est/get/$word';
+      String url = '${constants.DOMAIN}/est/get/$word';
 
       var jsonResponse;
       var res = await http.get(url, headers: {

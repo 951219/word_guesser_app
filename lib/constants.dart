@@ -1,2 +1,2 @@
 // TODO
-// -- add urls here
+const String DOMAIN = "https://wgwebserver.herokuapp.com/";

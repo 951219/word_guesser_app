@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../constants.dart' as constants;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,7 +9,7 @@ Future<bool> isLoggedIn() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   var loggedIn;
   if (sharedPreferences.containsKey("refreshToken")) {
-    String url = "https://wgwebserver.herokuapp.com/user/token";
+    String url = "${constants.DOMAIN}/user/token";
     Map body = {
       "refreshToken": sharedPreferences.getString('refreshToken'),
       "accessToken": sharedPreferences.getString('accessToken')

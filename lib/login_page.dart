@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import './constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:word_guesser_app/tab_frame.dart';
 
@@ -18,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
 
   singIn(String username, String password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String url = "https://wgwebserver.herokuapp.com/user/login";
+    String url = "${constants.DOMAIN}/user/login";
 
     Map body = {"username": username.toLowerCase(), "password": password};
 
