@@ -125,6 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _isLoading
                       ? null
                       : () {
+                          // TODO if a field is empty, show snackbar
                           setState(() {
                             _isLoading = true;
                           });

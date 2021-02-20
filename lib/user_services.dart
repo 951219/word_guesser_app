@@ -1,12 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import './constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'login_page.dart';
+
 logIn() {}
 
-Future<bool> logOut() async {
+Future<void> logOut(BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = "${constants.DOMAIN}/user/logout";
   Map body = {"token": sharedPreferences.getString('refreshToken')};
@@ -15,13 +18,17 @@ Future<bool> logOut() async {
   var res = await http.post(url, body: body);
 
   if (res.statusCode == 204) {
-    return true;
+    sharedPreferences.clear();
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (BuildContext context) => LoginPage(),
+        ),
+        (Route<dynamic> route) => false);
+    print('User logged out');
   } else {
     jsonResponse = json.decode(res.body);
-    print(jsonResponse['message']);
-    return false;
+    print("Could not log out the user: \n" + jsonResponse['message']);
   }
-// Delete the refreshtoken from db and clear sharedprefs
 }
 
 validateTokenAndHttpGet(String url) {

@@ -27,16 +27,9 @@ class _EntryPageState extends State<EntryPage>
         actions: [
           IconButton(
               icon: Icon(Icons.logout, color: Colors.black),
-              tooltip: 'Show Snackbar',
+              tooltip: 'Log out',
               onPressed: () async {
-                var success = await logOut();
-                if (success) {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => LoginPage(),
-                      ),
-                      (Route<dynamic> route) => false);
-                }
+                await logOut(context);
               }),
         ],
         elevation: 0.0,
