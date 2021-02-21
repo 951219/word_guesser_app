@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/widgets/bottom_word_modal.dart';
-import '../word_services.dart';
+import '../services/word_services.dart';
 
 class SearchTab extends StatefulWidget {
   @override

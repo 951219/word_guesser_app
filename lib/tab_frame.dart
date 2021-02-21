@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:word_guesser_app/tabs/search_tab.dart' as search;
 import 'package:word_guesser_app/tabs/saved_tab.dart' as saved;
 import 'package:word_guesser_app/tabs/guess_tab.dart' as guess;
-import 'user_services.dart';
+import 'services/user_services.dart';
 
 class EntryPage extends StatefulWidget {
   @override

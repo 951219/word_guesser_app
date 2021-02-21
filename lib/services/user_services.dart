@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:word_guesser_app/tab_frame.dart';
-import './constants.dart' as constants;
+import '../constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'login_page.dart';
+import '../login_page.dart';
 
 Future<void> singIn(
     String username, String password, BuildContext context) async {
@@ -41,7 +41,7 @@ Future<void> singIn(
   }
 }
 
-Future<void> logOut(BuildContext context) async {
+Future<void> logOut(context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = "${constants.DOMAIN}/user/logout";
   Map body = {"token": sharedPreferences.getString('refreshToken')};
@@ -62,6 +62,8 @@ Future<void> logOut(BuildContext context) async {
     print("Could not log out the user: \n" + jsonResponse['message']);
   }
 }
+
+class Buildcontext {}
 
 // checks if refreshToken is valid, it it is then it will return a new accessToken and saves it in sharedprefs
 Future<bool> syncIsLoggedIn() async {
@@ -96,11 +98,8 @@ Future<bool> syncIsLoggedIn() async {
   return loggedIn;
 }
 
-fetchUser() async {
+fetchUser(BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  // TODO If jwt expired, log out.
-  //TODO Starts looping if accesstoken is expired
-
   if (sharedPreferences.containsKey("refreshToken") &&
       sharedPreferences.containsKey("accessToken")) {
     print('sharedPreferences contains both');
@@ -116,12 +115,14 @@ fetchUser() async {
       print(
           "Response status: ${res.statusCode} - Sending a request to get a new access token");
       await syncIsLoggedIn();
-      fetchUser();
+      fetchUser(context);
     } else {
       print("Response status: ${res.statusCode}");
     }
   } else {
     print(
-        'sharedPreferences does not contain both: \n refresh: ${sharedPreferences.getString("refreshToken")} access: ${sharedPreferences.getString("accessToken")}');
+        'sharedPreferences does not contain both: \n refresh: ${sharedPreferences.getString("refreshToken")} access: ${sharedPreferences.getString("accessToken")} - logging out');
+    sharedPreferences.clear();
+    logOut(context);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/widgets/bottom_word_modal.dart';
-import '../user_services.dart';
-import '../word_services.dart';
+import '../services/user_services.dart';
+import '../services/word_services.dart';
 
 class SavedTab extends StatefulWidget {
   @override
@@ -28,7 +28,7 @@ class _SavedTabState extends State<SavedTab> {
   }
 
   Future<Widget> getBody() async {
-    var user = await fetchUser();
+    var user = await fetchUser(context);
     List _listItems = user['words'];
 
     if (_listItems.contains(null) || _listItems.length < 0) {

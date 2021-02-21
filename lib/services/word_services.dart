@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:word_guesser_app/user_services.dart';
-import './constants.dart' as constants;
+import 'package:word_guesser_app/services/user_services.dart';
+import '../constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 
 // TODO delete word
