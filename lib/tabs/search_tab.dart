@@ -33,7 +33,7 @@ class _SearchTabState extends State<SearchTab> {
         onPressed: () async {
           // TODO check if something is entered, if not then show a snackbar
 
-          var word = await fetchWord(_wordFieldController.text);
+          var word = await fetchWord(_wordFieldController.text, context);
           // TODO  if word = error, log the client out
           showBottomModal(context, word);
         },

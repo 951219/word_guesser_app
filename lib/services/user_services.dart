@@ -41,7 +41,7 @@ Future<void> singIn(
   }
 }
 
-Future<void> logOut(context) async {
+Future<void> logOut(BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = "${constants.DOMAIN}/user/logout";
   Map body = {"token": sharedPreferences.getString('refreshToken')};
@@ -62,8 +62,6 @@ Future<void> logOut(context) async {
     print("Could not log out the user: \n" + jsonResponse['message']);
   }
 }
-
-class Buildcontext {}
 
 // checks if refreshToken is valid, it it is then it will return a new accessToken and saves it in sharedprefs
 Future<bool> syncIsLoggedIn() async {
@@ -94,6 +92,7 @@ Future<bool> syncIsLoggedIn() async {
     }
   } else {
     print("No refreshToken/accessToken in sharedprefs");
+    // logOut();
     loggedIn = false;
   }
   return loggedIn;
@@ -116,7 +115,7 @@ fetchUser(BuildContext context) async {
       print(
           "Response status: ${res.statusCode} - Sending a request to get a new access token");
       await syncIsLoggedIn();
-      fetchUser(context);
+      return fetchUser(context);
     } else {
       print("Response status: ${res.statusCode}");
     }

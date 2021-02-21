@@ -75,7 +75,7 @@ class _SavedTabState extends State<SavedTab> {
             ],
           ),
           onTap: () async {
-            var wordObject = await fetchWord(word);
+            var wordObject = await fetchWord(word, context);
             showBottomModal(context, wordObject);
           },
         ),

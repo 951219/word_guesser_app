@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:word_guesser_app/models/word.dart';
 import 'package:word_guesser_app/services/user_services.dart';
@@ -10,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // TODO delete word
 // TODO update score
 
-Future<Word> fetchWord(String word) async {
+fetchWord(String word, BuildContext context) async {
   print("Calling: $word");
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = '${constants.DOMAIN}/est/get/$word';
@@ -28,8 +29,13 @@ Future<Word> fetchWord(String word) async {
   } else if (res.statusCode == 403) {
     print(jsonData['message']);
     await syncIsLoggedIn();
-    fetchWord(word);
+    return fetchWord(word, context);
+  } else if (res.statusCode == 401) {
+    print('You are unauthorized to view it, Logging out.' +
+        '\nerror: ${jsonData['message']}');
+    logOut(context);
   } else {
-    print('Some other error: ${jsonData['message']}');
+    print('Error: $jsonData');
+    logOut(context);
   }
 }
