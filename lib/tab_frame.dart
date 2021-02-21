@@ -35,7 +35,11 @@ class _EntryPageState extends State<EntryPage>
         backgroundColor: Colors.white,
         title: Text(
           'Word Guesser',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: Colors.black,
+            // fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         bottom: TabBar(
           controller: tabController,

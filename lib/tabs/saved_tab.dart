@@ -52,7 +52,7 @@ class _SavedTabState extends State<SavedTab> {
   }
 
   Widget getCard(item) {
-    var word = item['word'];
+    var word = item['word'].toString();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -63,11 +63,11 @@ class _SavedTabState extends State<SavedTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    word,
-                    style: TextStyle(fontSize: 27),
+                    "${word[0].toUpperCase()}${word.substring(1)}",
+                    style: TextStyle(fontSize: 24),
                   ),
                   Text(
-                    'data',
+                    "item",
                     style: TextStyle(fontSize: 17),
                   ),
                 ],

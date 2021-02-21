@@ -8,17 +8,46 @@ showBottomModal(context, Word word) {
     builder: (context) => Container(
       height: 600,
       child: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          // TODO favorite button
-          // TODO Delete button
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                word.word,
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    word.word.toUpperCase(),
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: InkWell(
+                          child: Text('Save'),
+                          onTap: null,
+                          // TODO
+                        ),
+                      ),
+                      PopupMenuItem(
+                        child: InkWell(
+                          child: Text('Broken'),
+                          onTap: null,
+                          // TODO
+                        ),
+                      ),
+                      PopupMenuItem(
+                        child: InkWell(
+                          child: Text('Delete'),
+                          onTap: null,
+                          // TODO
+                        ),
+                      ),
+                    ],
+                    child: Icon(Icons.settings_rounded, size: 30),
+                  ),
+                ],
               ),
             ),
             SizedBox(
