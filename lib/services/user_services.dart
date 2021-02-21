@@ -79,9 +79,10 @@ Future<bool> syncIsLoggedIn() async {
     var response = await http.post(url, body: body);
 
     if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
       print('Got a new token from the API');
-      sharedPreferences.setString("accessToken", jsonResponse['accessToken']);
+      var jsonResponse = json.decode(response.body);
+      await sharedPreferences.setString(
+          "accessToken", jsonResponse['accessToken']);
       loggedIn = true;
     } else if (response.statusCode == 403) {
       print(
