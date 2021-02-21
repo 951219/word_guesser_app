@@ -6,26 +6,54 @@ showBottomModal(context, Word word) {
   showMaterialModalBottomSheet(
     context: context,
     builder: (context) => Container(
-      height: 500,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-              word.word,
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+      height: 600,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          // TODO favorite button
+          // TODO Delete button
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                word.word,
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(word.meaning.toString()),
-          SizedBox(
-            height: 10,
-          ),
-          Text(word.example.toString()),
-        ],
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Definitions:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: getTextWidgets(word.meaning)),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Examples:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: getTextWidgets(word.example))
+          ],
+        ),
       ),
     ),
   );
+}
+
+List<Widget> getTextWidgets(List<String> strings) {
+  List list = new List<Widget>();
+  for (var i = 0; i < strings.length; i++) {
+    list.add(Text('* ${strings[i]}'));
+  }
+  return list;
 }
