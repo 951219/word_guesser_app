@@ -85,9 +85,6 @@ class _LoginPageState extends State<LoginPage> {
                           });
                           await singIn(_usernameController.text,
                               _passwordController.text, context);
-                          setState(() {
-                            _isLoading = false;
-                          });
                         },
                 ),
               ),

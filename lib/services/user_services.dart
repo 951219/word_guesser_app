@@ -85,9 +85,11 @@ Future<bool> syncIsLoggedIn() async {
     } else if (response.statusCode == 403) {
       print(
           "Statuscode: ${response.statusCode} \n Forbidden: Your token is invalid");
+      sharedPreferences.clear();
+      loggedIn = false;
     } else {
       print("Statuscode: ${response.statusCode}");
-      //TODO await sharedPreferences.clear();
+      sharedPreferences.clear();
       loggedIn = false;
     }
   } else {
@@ -99,18 +101,21 @@ Future<bool> syncIsLoggedIn() async {
 }
 
 fetchUser(BuildContext context) async {
+  print('fetchUser()');
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   if (sharedPreferences.containsKey("refreshToken") &&
       sharedPreferences.containsKey("accessToken")) {
-    print('sharedPreferences contains both');
+    print('sharedPreferences contains both tokens');
     var url = "${constants.DOMAIN}/user/getinfo";
     var res = await http.get(url, headers: {
       HttpHeaders.authorizationHeader:
           "Bearer ${sharedPreferences.getString('accessToken')}"
     });
     if (res.statusCode == 200) {
-      print("Response status: ${res.statusCode} - Got the user");
-      return json.decode(res.body);
+      print(
+          "Response status: ${res.statusCode} - Got the user and returning it");
+      var user = res.body;
+      return user;
     } else if (res.statusCode == 403) {
       print(
           "Response status: ${res.statusCode} - Sending a request to get a new access token");
@@ -126,3 +131,42 @@ fetchUser(BuildContext context) async {
     logOut(context);
   }
 }
+
+cacheUser(BuildContext context, String user, int day) async {
+  print('cacheUser()');
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  await sharedPreferences.setString('user', user);
+  await sharedPreferences.setInt('userLastUpdatedDay', day);
+}
+
+getUser(BuildContext context) async {
+  print('GetUser()');
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  if (sharedPreferences.containsKey('user') &&
+      sharedPreferences.containsKey('userLastUpdatedDay')) {
+    print('userDate and User are saved in prefs');
+    int userDay = sharedPreferences.getInt('userLastUpdatedDay');
+    int currentDay = DateTime.now().day;
+
+    if (userDay == currentDay) {
+      print('Date is a match');
+      return sharedPreferences.getString('user');
+    } else {
+      print('Date is not a match');
+      return returnUserData(context);
+    }
+  } else {
+    print('Some problem with USER or with userLastUpdatedDay in sharedprefs');
+    return returnUserData(context);
+  }
+}
+
+returnUserData(BuildContext context) async {
+  print('returnUserData()');
+  var user = await fetchUser(context);
+  var day = DateTime.now().day;
+  await cacheUser(context, user, day);
+  return getUser(context);
+}
+
+// TODO if an userDB is updated, then it should force fetch the userdata again.

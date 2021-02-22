@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/widgets/bottom_word_modal.dart';
 import '../services/user_services.dart';
@@ -28,7 +30,7 @@ class _SavedTabState extends State<SavedTab> {
   }
 
   Future<Widget> getBody() async {
-    var user = await fetchUser(context);
+    var user = jsonDecode(await getUser(context));
     List _listItems = user['words'];
 
     if (_listItems.contains(null) || _listItems.length < 0) {
