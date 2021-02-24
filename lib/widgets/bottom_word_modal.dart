@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:word_guesser_app/models/word.dart';
+import '../services/user_services.dart';
 
 showBottomModal(context, Word word) {
   showMaterialModalBottomSheet(
@@ -21,31 +22,52 @@ showBottomModal(context, Word word) {
                     word.word.toUpperCase(),
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
-                  PopupMenuButton(
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: InkWell(
-                          child: Text('Save'),
-                          onTap: null,
-                          // TODO
-                        ),
-                      ),
-                      PopupMenuItem(
-                        child: InkWell(
-                          child: Text('Broken'),
-                          onTap: null,
-                          // TODO
-                        ),
-                      ),
-                      PopupMenuItem(
-                        child: InkWell(
-                          child: Text('Delete'),
-                          onTap: null,
-                          // TODO
-                        ),
+                  Row(
+                    children: [
+                      FutureBuilder(
+                          future: userHasWord(context, word.wordId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              if (snapshot.data == true) {
+                                return IconButton(
+                                    icon: Icon(Icons.bookmark),
+                                    onPressed: () {});
+                              } else {
+                                return IconButton(
+                                    icon: Icon(Icons.bookmark_border),
+                                    onPressed: () {});
+                              }
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          }),
+                      PopupMenuButton(
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: InkWell(
+                              child: Text('Save'),
+                              onTap: null,
+                              // TODO
+                            ),
+                          ),
+                          PopupMenuItem(
+                            child: InkWell(
+                              child: Text('Broken'),
+                              onTap: null,
+                              // TODO
+                            ),
+                          ),
+                          PopupMenuItem(
+                            child: InkWell(
+                              child: Text('Delete'),
+                              onTap: null,
+                              // TODO
+                            ),
+                          ),
+                        ],
+                        child: Icon(Icons.settings_rounded, size: 30),
                       ),
                     ],
-                    child: Icon(Icons.settings_rounded, size: 30),
                   ),
                 ],
               ),

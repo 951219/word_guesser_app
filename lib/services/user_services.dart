@@ -140,6 +140,7 @@ cacheUser(BuildContext context, String user, int day) async {
 }
 
 getUser(BuildContext context) async {
+  // TODO maybe user the date and the hour of the day
   print('GetUser()');
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   if (sharedPreferences.containsKey('user') &&
@@ -169,4 +170,13 @@ returnUserData(BuildContext context) async {
   return getUser(context);
 }
 
-// TODO if an userDB is updated, then it should force fetch the userdata again.
+Future<bool> userHasWord(BuildContext context, int wordId) async {
+  print('userHasWord()');
+  var _user = jsonDecode(await getUser(context));
+  List _listItems = _user['words'];
+  var _newList = _listItems.where((word) => word['word_id'] == wordId).toList();
+  print(_newList.length);
+  return (_newList.length != 0);
+}
+
+// TODO if an save/remove is sent to userDB, then it should force fetch the userdata again and save it to cache.
