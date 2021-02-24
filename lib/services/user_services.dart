@@ -20,13 +20,18 @@ Future<void> singIn(
   var res = await http.post(url, body: body);
 
   if (res.statusCode == 200) {
+    print("Response status: ${res.statusCode}");
     jsonResponse = json.decode(res.body);
 
-    print("Response status: ${res.statusCode}");
-
     if (jsonResponse != null) {
-      sharedPreferences.setString("refreshToken", jsonResponse['refreshToken']);
-      sharedPreferences.setString("accessToken", jsonResponse['accessToken']);
+      sharedPreferences.setString(
+        "refreshToken",
+        jsonResponse['refreshToken'],
+      );
+      sharedPreferences.setString(
+        "accessToken",
+        jsonResponse['accessToken'],
+      );
       sharedPreferences.setBool('loggedIn', true);
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
@@ -44,7 +49,9 @@ Future<void> singIn(
 Future<void> logOut(BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = "${constants.DOMAIN}/user/logout";
-  Map body = {"token": sharedPreferences.getString('refreshToken')};
+  Map body = {
+    "token": sharedPreferences.getString('refreshToken'),
+  };
 
   var jsonResponse;
   var res = await http.post(url, body: body);
@@ -59,7 +66,9 @@ Future<void> logOut(BuildContext context) async {
     print('User logged out');
   } else {
     jsonResponse = json.decode(res.body);
-    print("Could not log out the user: \n" + jsonResponse['message']);
+    print(
+      "Could not log out the user: \n" + jsonResponse['message'],
+    );
   }
 }
 
@@ -80,7 +89,9 @@ Future<bool> syncIsLoggedIn() async {
       print('Got a new token from the API');
       var jsonResponse = json.decode(response.body);
       await sharedPreferences.setString(
-          "accessToken", jsonResponse['accessToken']);
+        "accessToken",
+        jsonResponse['accessToken'],
+      );
       loggedIn = true;
     } else if (response.statusCode == 403) {
       print(
@@ -107,10 +118,13 @@ fetchUser(BuildContext context) async {
       sharedPreferences.containsKey("accessToken")) {
     print('sharedPreferences contains both tokens');
     var url = "${constants.DOMAIN}/user/getinfo";
-    var res = await http.get(url, headers: {
-      HttpHeaders.authorizationHeader:
-          "Bearer ${sharedPreferences.getString('accessToken')}"
-    });
+    var res = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader:
+            "Bearer ${sharedPreferences.getString('accessToken')}"
+      },
+    );
     if (res.statusCode == 200) {
       print(
           "Response status: ${res.statusCode} - Got the user and returning it");
@@ -178,33 +192,59 @@ Future<bool> userHasWord(BuildContext context, int wordId) async {
   return (_newList.length != 0);
 }
 
-Future<bool> removeFromUserDB(int wordId) async {
-//   router.delete('/remove/:word_id', authorizeUser, (req, res) => {
-//     removeFromUserDictionary(req.params.word_id, req.user_id);
-//     res.status(200).json({ message: 'Word removed' });
-//   });
-}
-
-Future<bool> saveToUserDB(int wordId) async {
+Future<bool> removeFromUserDB(BuildContext context, int wordId) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-  var url = "${constants.DOMAIN}/est/save/$wordId";
-  var res = await http.post(url, headers: {
-    HttpHeaders.authorizationHeader:
-        "Bearer ${sharedPreferences.getString('accessToken')}"
-  });
+  var url = "${constants.DOMAIN}/est/remove/$wordId";
+  var res = await http.delete(
+    url,
+    headers: {
+      HttpHeaders.authorizationHeader:
+          "Bearer ${sharedPreferences.getString('accessToken')}"
+    },
+  );
 
   if (res.statusCode == 200) {
     print(json.decode(res.body));
+    updateCachedUser(context);
     return true;
   } else {
-    print("Error: Response status: ${res.statusCode}");
+    print(
+        "Error: Response status: ${res.statusCode} \n ${json.decode(res.body)}");
+    // TODO if jwt expired
     return false;
   }
-//   router.post('/save/:word_id', authorizeUser, (req, res) => {
-//     saveToUserDictionary(req.params.word_id, req.user_id);
-//     res.status(200).json({ message: 'Word saved' });
-//   });
+  // TODO if removed, refresh the list on my db page
+}
+
+Future<bool> saveToUserDB(BuildContext context, int wordId) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+  var url = "${constants.DOMAIN}/est/save/$wordId";
+  var res = await http.post(
+    url,
+    headers: {
+      HttpHeaders.authorizationHeader:
+          "Bearer ${sharedPreferences.getString('accessToken')}"
+    },
+  );
+
+  if (res.statusCode == 200) {
+    print(json.decode(res.body));
+    updateCachedUser(context);
+    return true;
+  } else {
+    print(
+        "Error: Response status: ${res.statusCode} \n ${json.decode(res.body)}");
+    // TODO if jwt expired
+    return false;
+  }
+}
+
+updateCachedUser(BuildContext context) async {
+  var user = await fetchUser(context);
+  var day = DateTime.now().day;
+  await cacheUser(context, user, day);
 }
 
 // TODO if an save/remove is sent to userDB, then it should force fetch the userdata again and save it to cache.

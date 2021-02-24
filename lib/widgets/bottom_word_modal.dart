@@ -30,10 +30,11 @@ showBottomModal(context, Word word) {
                       PopupMenuButton(
                         itemBuilder: (context) => [
                           PopupMenuItem(
+                            // If (addedAlready){ show deleted} else{ show add}
                             child: InkWell(
                                 child: Text('Save'),
                                 onTap: () async {
-                                  await saveToUserDB(word.wordId);
+                                  await saveToUserDB(context, word.wordId);
                                 }),
                           ),
                           PopupMenuItem(
@@ -47,7 +48,7 @@ showBottomModal(context, Word word) {
                             child: InkWell(
                               child: Text('Delete'),
                               onTap: () async {
-                                await removeFromUserDB(word.wordId);
+                                await removeFromUserDB(context, word.wordId);
                               },
                             ),
                           ),
