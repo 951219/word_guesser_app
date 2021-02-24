@@ -175,8 +175,36 @@ Future<bool> userHasWord(BuildContext context, int wordId) async {
   var _user = jsonDecode(await getUser(context));
   List _listItems = _user['words'];
   var _newList = _listItems.where((word) => word['word_id'] == wordId).toList();
-  print(_newList.length);
   return (_newList.length != 0);
+}
+
+Future<bool> removeFromUserDB(int wordId) async {
+//   router.delete('/remove/:word_id', authorizeUser, (req, res) => {
+//     removeFromUserDictionary(req.params.word_id, req.user_id);
+//     res.status(200).json({ message: 'Word removed' });
+//   });
+}
+
+Future<bool> saveToUserDB(int wordId) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+  var url = "${constants.DOMAIN}/est/save/$wordId";
+  var res = await http.post(url, headers: {
+    HttpHeaders.authorizationHeader:
+        "Bearer ${sharedPreferences.getString('accessToken')}"
+  });
+
+  if (res.statusCode == 200) {
+    print(json.decode(res.body));
+    return true;
+  } else {
+    print("Error: Response status: ${res.statusCode}");
+    return false;
+  }
+//   router.post('/save/:word_id', authorizeUser, (req, res) => {
+//     saveToUserDictionary(req.params.word_id, req.user_id);
+//     res.status(200).json({ message: 'Word saved' });
+//   });
 }
 
 // TODO if an save/remove is sent to userDB, then it should force fetch the userdata again and save it to cache.

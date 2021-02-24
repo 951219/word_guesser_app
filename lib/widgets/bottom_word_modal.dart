@@ -4,6 +4,8 @@ import 'package:word_guesser_app/models/word.dart';
 import '../services/user_services.dart';
 
 showBottomModal(context, Word word) {
+  // TODO Single child scrollable view so longer data would not break the view
+  // TODO show modal before and then load data so this would prevent spamming.
   showMaterialModalBottomSheet(
     context: context,
     builder: (context) => Container(
@@ -24,31 +26,15 @@ showBottomModal(context, Word word) {
                   ),
                   Row(
                     children: [
-                      FutureBuilder(
-                          future: userHasWord(context, word.wordId),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data == true) {
-                                return IconButton(
-                                    icon: Icon(Icons.bookmark),
-                                    onPressed: () {});
-                              } else {
-                                return IconButton(
-                                    icon: Icon(Icons.bookmark_border),
-                                    onPressed: () {});
-                              }
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          }),
+                      // BookMarkWidget(wordId: word.wordId),
                       PopupMenuButton(
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             child: InkWell(
-                              child: Text('Save'),
-                              onTap: null,
-                              // TODO
-                            ),
+                                child: Text('Save'),
+                                onTap: () async {
+                                  await saveToUserDB(word.wordId);
+                                }),
                           ),
                           PopupMenuItem(
                             child: InkWell(
@@ -60,8 +46,9 @@ showBottomModal(context, Word word) {
                           PopupMenuItem(
                             child: InkWell(
                               child: Text('Delete'),
-                              onTap: null,
-                              // TODO
+                              onTap: () async {
+                                await removeFromUserDB(word.wordId);
+                              },
                             ),
                           ),
                         ],
