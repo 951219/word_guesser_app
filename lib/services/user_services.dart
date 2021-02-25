@@ -146,24 +146,23 @@ fetchUser(BuildContext context) async {
   }
 }
 
-cacheUser(BuildContext context, String user, int day) async {
+cacheUser(BuildContext context, String user, int minute) async {
   print('cacheUser()');
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   await sharedPreferences.setString('user', user);
-  await sharedPreferences.setInt('userLastUpdatedDay', day);
+  await sharedPreferences.setInt('userLastUpdatedMinute', minute);
 }
 
 getUser(BuildContext context) async {
-  // TODO maybe user the date and the hour of the day
   print('GetUser()');
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   if (sharedPreferences.containsKey('user') &&
-      sharedPreferences.containsKey('userLastUpdatedDay')) {
+      sharedPreferences.containsKey('userLastUpdatedMinute')) {
     print('userDate and User are saved in prefs');
-    int userDay = sharedPreferences.getInt('userLastUpdatedDay');
-    int currentDay = DateTime.now().day;
+    int userMinute = sharedPreferences.getInt('userLastUpdatedMinute');
+    int currentMinute = DateTime.now().minute;
 
-    if (userDay == currentDay) {
+    if (userMinute == currentMinute) {
       print('Date is a match');
       return sharedPreferences.getString('user');
     } else {
@@ -171,7 +170,8 @@ getUser(BuildContext context) async {
       return returnUserData(context);
     }
   } else {
-    print('Some problem with USER or with userLastUpdatedDay in sharedprefs');
+    print(
+        'Some problem with USER or with userLastUpdatedMinute in sharedprefs');
     return returnUserData(context);
   }
 }
@@ -179,8 +179,8 @@ getUser(BuildContext context) async {
 returnUserData(BuildContext context) async {
   print('returnUserData()');
   var user = await fetchUser(context);
-  var day = DateTime.now().day;
-  await cacheUser(context, user, day);
+  var minute = DateTime.now().minute;
+  await cacheUser(context, user, minute);
   return getUser(context);
 }
 
@@ -189,10 +189,13 @@ Future<bool> userHasWord(BuildContext context, int wordId) async {
   var _user = jsonDecode(await getUser(context));
   List _listItems = _user['words'];
   var _newList = _listItems.where((word) => word['word_id'] == wordId).toList();
-  return (_newList.length != 0);
+  bool value = _newList.length != 0;
+  print(value);
+  return value;
 }
 
-Future<bool> removeFromUserDB(BuildContext context, int wordId) async {
+removeFromUserDB(BuildContext context, int wordId) async {
+  print('removeFromUserDB()');
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
   var url = "${constants.DOMAIN}/est/remove/$wordId";
@@ -206,7 +209,7 @@ Future<bool> removeFromUserDB(BuildContext context, int wordId) async {
 
   if (res.statusCode == 200) {
     print(json.decode(res.body));
-    updateCachedUser(context);
+    await updateCachedUser(context);
     return true;
   } else {
     print(
@@ -217,7 +220,8 @@ Future<bool> removeFromUserDB(BuildContext context, int wordId) async {
   // TODO if removed, refresh the list on my db page
 }
 
-Future<bool> saveToUserDB(BuildContext context, int wordId) async {
+saveToUserDB(BuildContext context, int wordId) async {
+  print('saveToUserDB()');
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
   var url = "${constants.DOMAIN}/est/save/$wordId";
@@ -231,7 +235,7 @@ Future<bool> saveToUserDB(BuildContext context, int wordId) async {
 
   if (res.statusCode == 200) {
     print(json.decode(res.body));
-    updateCachedUser(context);
+    await updateCachedUser(context);
     return true;
   } else {
     print(
@@ -243,8 +247,8 @@ Future<bool> saveToUserDB(BuildContext context, int wordId) async {
 
 updateCachedUser(BuildContext context) async {
   var user = await fetchUser(context);
-  var day = DateTime.now().day;
-  await cacheUser(context, user, day);
+  var minute = DateTime.now().minute;
+  await cacheUser(context, user, minute);
 }
 
 // TODO if an save/remove is sent to userDB, then it should force fetch the userdata again and save it to cache.

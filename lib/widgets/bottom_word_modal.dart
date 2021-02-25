@@ -3,9 +3,11 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:word_guesser_app/models/word.dart';
 import '../services/user_services.dart';
 
-showBottomModal(context, Word word) {
+showBottomModal(context, Word word) async {
   // TODO Single child scrollable view so longer data would not break the view
   // TODO show modal before and then load data so this would prevent spamming.
+
+  bool _isSavedToDB = await userHasWord(context, word.wordId);
   showMaterialModalBottomSheet(
     context: context,
     builder: (context) => Container(
@@ -26,16 +28,27 @@ showBottomModal(context, Word word) {
                   ),
                   Row(
                     children: [
-                      // BookMarkWidget(wordId: word.wordId),
                       PopupMenuButton(
                         itemBuilder: (context) => [
                           PopupMenuItem(
-                            // If (addedAlready){ show deleted} else{ show add}
-                            child: InkWell(
-                                child: Text('Save'),
-                                onTap: () async {
-                                  await saveToUserDB(context, word.wordId);
-                                }),
+                            child: Container(
+                              // TODO adding not working
+                              child: (_isSavedToDB)
+                                  ? InkWell(
+                                      child: Text('Remove'),
+                                      onTap: () async {
+                                        await removeFromUserDB(
+                                            context, word.wordId);
+                                      },
+                                    )
+                                  : InkWell(
+                                      child: Text('Save'),
+                                      onTap: () async {
+                                        await saveToUserDB(
+                                            context, word.wordId);
+                                      },
+                                    ),
+                            ),
                           ),
                           PopupMenuItem(
                             child: InkWell(
@@ -44,16 +57,8 @@ showBottomModal(context, Word word) {
                               // TODO
                             ),
                           ),
-                          PopupMenuItem(
-                            child: InkWell(
-                              child: Text('Delete'),
-                              onTap: () async {
-                                await removeFromUserDB(context, word.wordId);
-                              },
-                            ),
-                          ),
                         ],
-                        child: Icon(Icons.settings_rounded, size: 30),
+                        icon: Icon(Icons.settings_rounded, size: 30),
                       ),
                     ],
                   ),
@@ -70,7 +75,7 @@ showBottomModal(context, Word word) {
             Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: getTextWidgets(word.meaning)),
+                children: _getTextWidgets(word.meaning)),
             SizedBox(
               height: 20,
             ),
@@ -81,7 +86,7 @@ showBottomModal(context, Word word) {
             Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: getTextWidgets(word.example))
+                children: _getTextWidgets(word.example))
           ],
         ),
       ),
@@ -89,7 +94,7 @@ showBottomModal(context, Word word) {
   );
 }
 
-List<Widget> getTextWidgets(List<String> strings) {
+List<Widget> _getTextWidgets(List<String> strings) {
   List list = new List<Widget>();
   for (var i = 0; i < strings.length; i++) {
     list.add(Text('* ${strings[i]}'));
