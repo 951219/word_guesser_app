@@ -2,16 +2,13 @@ class Word {
   final String word;
   List<String> meaning;
   List<String> example;
-  final String tries; // is a number if fetched
-  final String index;
-  final String id;
+  final int wordId;
 
-  Word(
-      {this.word, this.meaning, this.example, this.tries, this.index, this.id});
+  Word({this.word, this.meaning, this.example, this.wordId});
 
   @override
   String toString() {
-    return 'Word{word: $word, definition: $meaning, example: $example, tries: $tries, index: $index, id: $id}';
+    return 'Word{word: $word, definition: $meaning, example: $example, id: $wordId}';
   }
 
   factory Word.fromJson(Map<String, dynamic> json) {
@@ -22,9 +19,6 @@ class Word {
         word: json['word'],
         meaning: meaningList,
         example: exampleList,
-        tries: json['tries']
-            .toString(), //db is returning an int, app wants a string
-        index: json['index'],
-        id: json['_id']);
+        wordId: json['wordId']);
   }
 }

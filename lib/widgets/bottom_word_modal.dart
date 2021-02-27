@@ -1,12 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:word_guesser_app/models/word.dart';
+import '../services/user_services.dart';
 
-showBottomModal(context, Word word) {
+showBottomModal(context, Word word) async {
+  // TODO Single child scrollable view so longer data would not break the view
+  // TODO show modal before and then load data so this would prevent spamming.
+
+  bool _isSavedToDB = await userHasWord(context, word.wordId) ?? false;
+
+  Widget bookMarkWidget;
+
+  if (_isSavedToDB) {
+    bookMarkWidget = IconButton(
+      icon: Text('Remove'),
+      onPressed: () async {
+        await removeFromUserDB(context, word.wordId);
+      },
+    );
+  } else {
+    bookMarkWidget = IconButton(
+      icon: Text('Save'),
+      onPressed: () async {
+        await saveToUserDB(context, word.wordId);
+      },
+    );
+  }
+
   showMaterialModalBottomSheet(
     context: context,
     builder: (context) => Container(
-      height: 600,
+      height: 650,
       child: Padding(
         padding: EdgeInsets.all(15),
         child: Column(
@@ -21,31 +45,23 @@ showBottomModal(context, Word word) {
                     word.word.toUpperCase(),
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
-                  PopupMenuButton(
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: InkWell(
-                          child: Text('Save'),
-                          onTap: null,
-                          // TODO
-                        ),
-                      ),
-                      PopupMenuItem(
-                        child: InkWell(
-                          child: Text('Broken'),
-                          onTap: null,
-                          // TODO
-                        ),
-                      ),
-                      PopupMenuItem(
-                        child: InkWell(
-                          child: Text('Delete'),
-                          onTap: null,
-                          // TODO
-                        ),
+                  Row(
+                    children: [
+                      Container(width: 70, child: bookMarkWidget),
+                      PopupMenuButton(
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: Container(
+                              child: InkWell(
+                                child: Text('Broken'),
+                                onTap: () {},
+                              ),
+                            ),
+                          ),
+                        ],
+                        icon: Icon(Icons.settings_rounded, size: 30),
                       ),
                     ],
-                    child: Icon(Icons.settings_rounded, size: 30),
                   ),
                 ],
               ),
@@ -60,7 +76,7 @@ showBottomModal(context, Word word) {
             Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: getTextWidgets(word.meaning)),
+                children: _getTextWidgets(word.meaning)),
             SizedBox(
               height: 20,
             ),
@@ -71,7 +87,7 @@ showBottomModal(context, Word word) {
             Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: getTextWidgets(word.example))
+                children: _getTextWidgets(word.example))
           ],
         ),
       ),
@@ -79,7 +95,7 @@ showBottomModal(context, Word word) {
   );
 }
 
-List<Widget> getTextWidgets(List<String> strings) {
+List<Widget> _getTextWidgets(List<String> strings) {
   List list = new List<Widget>();
   for (var i = 0; i < strings.length; i++) {
     list.add(Text('* ${strings[i]}'));
