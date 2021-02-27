@@ -7,11 +7,30 @@ showBottomModal(context, Word word) async {
   // TODO Single child scrollable view so longer data would not break the view
   // TODO show modal before and then load data so this would prevent spamming.
 
-  bool _isSavedToDB = await userHasWord(context, word.wordId);
+  bool _isSavedToDB = await userHasWord(context, word.wordId) ?? false;
+
+  Widget bookMarkWidget;
+
+  if (_isSavedToDB) {
+    bookMarkWidget = IconButton(
+      icon: Text('Remove'),
+      onPressed: () async {
+        await removeFromUserDB(context, word.wordId);
+      },
+    );
+  } else {
+    bookMarkWidget = IconButton(
+      icon: Text('Save'),
+      onPressed: () async {
+        await saveToUserDB(context, word.wordId);
+      },
+    );
+  }
+
   showMaterialModalBottomSheet(
     context: context,
     builder: (context) => Container(
-      height: 600,
+      height: 650,
       child: Padding(
         padding: EdgeInsets.all(15),
         child: Column(
@@ -28,33 +47,15 @@ showBottomModal(context, Word word) async {
                   ),
                   Row(
                     children: [
+                      Container(width: 70, child: bookMarkWidget),
                       PopupMenuButton(
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             child: Container(
-                              // TODO adding not working
-                              child: (_isSavedToDB)
-                                  ? InkWell(
-                                      child: Text('Remove'),
-                                      onTap: () async {
-                                        await removeFromUserDB(
-                                            context, word.wordId);
-                                      },
-                                    )
-                                  : InkWell(
-                                      child: Text('Save'),
-                                      onTap: () async {
-                                        await saveToUserDB(
-                                            context, word.wordId);
-                                      },
-                                    ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            child: InkWell(
-                              child: Text('Broken'),
-                              onTap: null,
-                              // TODO
+                              child: InkWell(
+                                child: Text('Broken'),
+                                onTap: () {},
+                              ),
                             ),
                           ),
                         ],

@@ -57,8 +57,9 @@ class _SavedTabState extends State<SavedTab> {
     var word = item['word'].toString();
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: EdgeInsets.all(0),
         child: ListTile(
+          contentPadding: EdgeInsets.all(8),
           title: Row(
             children: [
               Column(
@@ -70,6 +71,7 @@ class _SavedTabState extends State<SavedTab> {
                   ),
                   Text(
                     "item",
+                    // TODO add data
                     style: TextStyle(fontSize: 17),
                   ),
                 ],
