@@ -84,7 +84,6 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _isLoading
                       ? null
                       : () async {
-                          // TODO if a field is empty, show snackbar
                           if (_usernameController.text.length == 0 ||
                               _passwordController.text.length == 0) {
                             Flushbar(
@@ -126,7 +125,14 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 20,
               ),
-              FlatButton(child: Text('Forgot Password'), onPressed: () {})
+              FlatButton(
+                  child: Text('Forgot Password'),
+                  onPressed: () {
+                    Flushbar(
+                      message: "Psst! This part is not yet ready",
+                      duration: Duration(seconds: 3),
+                    )..show(context);
+                  })
             ],
           ),
         ),
