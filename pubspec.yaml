@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  another_flushbar: ^1.10.11
   cupertino_icons: ^1.0.0
   http: ^0.12.2
   modal_bottom_sheet: ^1.0.0+1
