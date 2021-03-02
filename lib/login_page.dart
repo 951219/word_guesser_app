@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/services/user_services.dart';
+import 'constants.dart' as constants;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -24,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Text(
                 'Login',
-                style: TextStyle(fontSize: 48),
+                style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 20,
@@ -71,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 60,
                 width: MediaQuery.of(context).size.width,
                 child: RaisedButton(
-                  color: Colors.lightBlueAccent,
+                  color: constants.cyan,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                   child: Text("Sing in",
