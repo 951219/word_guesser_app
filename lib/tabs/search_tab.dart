@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/widgets/bottom_word_modal.dart';
 import '../services/word_services.dart';
@@ -34,11 +35,17 @@ class _SearchTabState extends State<SearchTab> {
           child: Text("Fetch word",
               style: TextStyle(fontSize: 32, color: Colors.white)),
           onPressed: () async {
-            // TODO check if something is entered, if not then show a snackbar
-
-            var word = await fetchWord(_wordFieldController.text, context);
-            // TODO  if word = error, log the client out
-            showBottomModal(context, word);
+            if (_wordFieldController.text.length == 0) {
+              Flushbar(
+                message: "Hey dummy! Make sure you entered a word.",
+                duration: Duration(seconds: 3),
+              )..show(context);
+            } else {
+              var word = await fetchWord(_wordFieldController.text, context);
+              // TODO if no word returned, show a toast
+              // TODO  if unauthorized, log out.
+              showBottomModal(context, word);
+            }
           },
         ),
       ],
