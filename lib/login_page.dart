@@ -1,5 +1,7 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/services/user_services.dart';
+import 'package:word_guesser_app/tab_frame.dart';
 import 'constants.dart' as constants;
 
 class LoginPage extends StatefulWidget {
@@ -75,17 +77,49 @@ class _LoginPageState extends State<LoginPage> {
                   color: constants.cyan,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
-                  child: Text("Sing in",
-                      style: TextStyle(fontSize: 32, color: Colors.white)),
+                  child: _isLoading
+                      ? CircularProgressIndicator()
+                      : Text("Sing in",
+                          style: TextStyle(fontSize: 32, color: Colors.white)),
                   onPressed: _isLoading
                       ? null
                       : () async {
                           // TODO if a field is empty, show snackbar
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          await singIn(_usernameController.text,
-                              _passwordController.text, context);
+                          if (_usernameController.text.length == 0 ||
+                              _passwordController.text.length == 0) {
+                            Flushbar(
+                              message:
+                                  "Hey dummy! Make sure you entered both password and username",
+                              duration: Duration(seconds: 3),
+                            )..show(context);
+                          } else {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            var result = await singIn(_usernameController.text,
+                                _passwordController.text, context);
+
+                            if (result) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        EntryPage(),
+                                  ),
+                                  (Route<dynamic> route) => false);
+                            } else {
+                              Flushbar(
+                                message:
+                                    "Oopsie! Server said no-no, please check your credentials",
+                                duration: Duration(seconds: 3),
+                              )..show(context).then(
+                                  (value) => setState(
+                                    () {
+                                      _isLoading = false;
+                                    },
+                                  ),
+                                );
+                            }
+                          }
                         },
                 ),
               ),

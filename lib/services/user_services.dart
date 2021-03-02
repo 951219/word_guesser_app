@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../login_page.dart';
 
-Future<void> singIn(
+Future<bool> singIn(
     String username, String password, BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = "${constants.DOMAIN}/user/login";
@@ -33,14 +33,14 @@ Future<void> singIn(
         jsonResponse['accessToken'],
       );
       sharedPreferences.setBool('loggedIn', true);
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (BuildContext context) => EntryPage(),
-          ),
-          (Route<dynamic> route) => false);
+
+      return true;
     } else {
       print("Response status: ${res.body}");
     }
+  } else if (res.statusCode == 400) {
+    print("Wrong data - Response status: ${res.statusCode}");
+    return false;
   } else {
     print("Error: Response status: ${res.statusCode}");
   }
