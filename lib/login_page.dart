@@ -73,10 +73,12 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 60,
                 width: MediaQuery.of(context).size.width,
-                child: RaisedButton(
-                  color: constants.cyan,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
+                child: ElevatedButton(
+                  // TODO fix corners
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(constants.cyan),
+                  ),
                   child: _isLoading
                       ? CircularProgressIndicator()
                       : Text("Sing in",

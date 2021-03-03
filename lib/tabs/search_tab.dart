@@ -29,37 +29,21 @@ class _SearchTabState extends State<SearchTab> {
             ),
           ),
         ),
-        RaisedButton(
-          color: constants.cyan,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          // TODO if loading, the button decreases, we don\t want that
-          child: _isLoading
-              ? CircularProgressIndicator()
-              : Text("Fetch word",
-                  style: TextStyle(fontSize: 32, color: Colors.white)),
-          onPressed: _isLoading
-              ? null
-              : () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  if (_wordFieldController.text.length == 0) {
-                    Flushbar(
-                      message: "Hey dummy! Make sure you entered a word.",
-                      duration: Duration(seconds: 3),
-                    )..show(context).then(
-                        (value) => setState(() {
-                          _isLoading = false;
-                        }),
-                      );
-                  } else {
-                    var word =
-                        await fetchWord(_wordFieldController.text, context);
-                    if (word == 'Not found') {
+        ElevatedButton(
+            // TODO fix corners
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(constants.cyan),
+            ),
+            // TODO if loading, the button decreases, we don\t want that
+            onPressed: _isLoading
+                ? null
+                : () async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    if (_wordFieldController.text.length == 0) {
                       Flushbar(
-                        message:
-                            "The DB could not find this word ${_wordFieldController.text}, check for typos.",
+                        message: "Hey dummy! Make sure you entered a word.",
                         duration: Duration(seconds: 3),
                       )..show(context).then(
                           (value) => setState(() {
@@ -67,15 +51,31 @@ class _SearchTabState extends State<SearchTab> {
                           }),
                         );
                     } else {
-                      showBottomModal(context, word);
-                      setState(() {
-                        _isLoading = false;
-                      });
+                      var word =
+                          await fetchWord(_wordFieldController.text, context);
+                      if (word == 'Not found') {
+                        Flushbar(
+                          message:
+                              "The DB could not find this word ${_wordFieldController.text}, check for typos.",
+                          duration: Duration(seconds: 3),
+                        )..show(context).then(
+                            (value) => setState(() {
+                              _isLoading = false;
+                            }),
+                          );
+                      } else {
+                        showBottomModal(context, word);
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                      // TODO  if refreshtoken would be deleted in DB, it starts looping. it should log out.
                     }
-                    // TODO  if refreshtoken would be deleted in DB, it starts looping. it should log out.
-                  }
-                },
-        ),
+                  },
+            child: _isLoading
+                ? CircularProgressIndicator()
+                : Text("Fetch word",
+                    style: TextStyle(fontSize: 32, color: Colors.white))),
       ],
     );
   }
