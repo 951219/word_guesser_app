@@ -52,7 +52,7 @@ Future<void> logOut(BuildContext context) async {
   Map body = {
     "token": sharedPreferences.getString('refreshToken'),
   };
-
+  // TODO IF logout and log back in, it does not check the credentials and it will break the app
   var jsonResponse;
   var res = await http.post(url, body: body);
 
