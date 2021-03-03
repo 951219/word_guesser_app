@@ -11,6 +11,7 @@ class SearchTab extends StatefulWidget {
 
 class _SearchTabState extends State<SearchTab> {
   TextEditingController _wordFieldController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,28 +33,48 @@ class _SearchTabState extends State<SearchTab> {
           color: constants.cyan,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Text("Fetch word",
-              style: TextStyle(fontSize: 32, color: Colors.white)),
-          onPressed: () async {
-            if (_wordFieldController.text.length == 0) {
-              Flushbar(
-                message: "Hey dummy! Make sure you entered a word.",
-                duration: Duration(seconds: 3),
-              )..show(context);
-            } else {
-              var word = await fetchWord(_wordFieldController.text, context);
-              if (word == 'Not found') {
-                Flushbar(
-                  message:
-                      "The DB could not find this word ${_wordFieldController.text}, check for typos.",
-                  duration: Duration(seconds: 3),
-                )..show(context);
-              } else {
-                showBottomModal(context, word);
-              }
-              // TODO  if refreshtoken would be deleted in DB, it starts looping. it should log out.
-            }
-          },
+          // TODO if loading, the button decreases, we don\t want that
+          child: _isLoading
+              ? CircularProgressIndicator()
+              : Text("Fetch word",
+                  style: TextStyle(fontSize: 32, color: Colors.white)),
+          onPressed: _isLoading
+              ? null
+              : () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  if (_wordFieldController.text.length == 0) {
+                    Flushbar(
+                      message: "Hey dummy! Make sure you entered a word.",
+                      duration: Duration(seconds: 3),
+                    )..show(context).then(
+                        (value) => setState(() {
+                          _isLoading = false;
+                        }),
+                      );
+                  } else {
+                    var word =
+                        await fetchWord(_wordFieldController.text, context);
+                    if (word == 'Not found') {
+                      Flushbar(
+                        message:
+                            "The DB could not find this word ${_wordFieldController.text}, check for typos.",
+                        duration: Duration(seconds: 3),
+                      )..show(context).then(
+                          (value) => setState(() {
+                            _isLoading = false;
+                          }),
+                        );
+                    } else {
+                      showBottomModal(context, word);
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
+                    // TODO  if refreshtoken would be deleted in DB, it starts looping. it should log out.
+                  }
+                },
         ),
       ],
     );
