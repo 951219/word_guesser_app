@@ -42,9 +42,16 @@ class _SearchTabState extends State<SearchTab> {
               )..show(context);
             } else {
               var word = await fetchWord(_wordFieldController.text, context);
-              // TODO if no word returned, show a toast
-              // TODO  if unauthorized, log out.
-              showBottomModal(context, word);
+              if (word == 'Not found') {
+                Flushbar(
+                  message:
+                      "The DB could not find this word ${_wordFieldController.text}, check for typos.",
+                  duration: Duration(seconds: 3),
+                )..show(context);
+              } else {
+                showBottomModal(context, word);
+              }
+              // TODO  if refreshtoken would be deleted in DB, it starts looping. it should log out.
             }
           },
         ),

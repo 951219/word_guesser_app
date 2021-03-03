@@ -34,6 +34,9 @@ fetchWord(String word, BuildContext context) async {
     print('You are unauthorized to view it, Logging out.' +
         '\nerror: ${jsonData['message']}');
     logOut(context);
+  } else if (res.statusCode == 404) {
+    print('Word \'$word\' not found');
+    return 'Not found';
   } else {
     print('Error: $jsonData');
     logOut(context);
