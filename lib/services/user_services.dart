@@ -7,7 +7,7 @@ import 'package:word_guesser_app/tab_frame.dart';
 import '../constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../login_page.dart';
+import '../pages/login_page.dart';
 
 Future<bool> singIn(
     String username, String password, BuildContext context) async {

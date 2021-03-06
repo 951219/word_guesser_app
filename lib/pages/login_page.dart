@@ -2,7 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/services/user_services.dart';
 import 'package:word_guesser_app/tab_frame.dart';
-import 'constants.dart' as constants;
+import '../constants.dart' as constants;
 
 class LoginPage extends StatefulWidget {
   @override

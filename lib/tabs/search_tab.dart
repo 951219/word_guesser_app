@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:word_guesser_app/widgets/bottom_word_modal.dart';
+import 'package:word_guesser_app/models/word.dart';
+import 'package:word_guesser_app/pages/word_page.dart';
 import '../services/word_services.dart';
 import '../constants.dart' as constants;
 
@@ -64,7 +65,11 @@ class _SearchTabState extends State<SearchTab> {
                             }),
                           );
                       } else {
-                        showBottomModal(context, word);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WordPage(word: word)),
+                        );
                         setState(() {
                           _isLoading = false;
                         });

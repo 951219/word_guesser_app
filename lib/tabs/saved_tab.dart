@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:word_guesser_app/widgets/bottom_word_modal.dart';
+import 'package:word_guesser_app/models/word.dart';
+import 'package:word_guesser_app/pages/word_page.dart';
 import '../services/user_services.dart';
 import '../services/word_services.dart';
 
@@ -79,8 +80,13 @@ class _SavedTabState extends State<SavedTab> {
             ],
           ),
           onTap: () async {
-            var wordObject = await fetchWord(word, context);
-            showBottomModal(context, wordObject);
+            Word wordObject = await fetchWord(word, context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => WordPage(word: wordObject)),
+            );
+            // Disable click action if pressed already ro prevent multiple clicks
           },
         ),
       ),
