@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:word_guesser_app/tab_frame.dart';
 import '../constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,7 +42,9 @@ Future<bool> singIn(
     return false;
   } else {
     print("Error: Response status: ${res.statusCode}");
+    return false;
   }
+  return false;
 }
 
 Future<void> logOut(BuildContext context) async {
@@ -163,10 +164,10 @@ getUser(BuildContext context) async {
     int currentMinute = DateTime.now().minute;
 
     if (userMinute == currentMinute) {
-      print('Date is a match');
+      print('Minute is a match');
       return sharedPreferences.getString('user');
     } else {
-      print('Date is not a match');
+      print('Minute is not a match');
       return returnUserData(context);
     }
   } else {
@@ -190,7 +191,7 @@ Future<bool> userHasWord(BuildContext context, int wordId) async {
   List _listItems = _user['words'];
   var _newList = _listItems.where((word) => word['word_id'] == wordId).toList();
   bool value = _newList.length != 0;
-  print(value);
+  print('User has word');
   return value;
 }
 

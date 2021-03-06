@@ -49,7 +49,7 @@ getBody(BuildContext context, Word word) async {
 
   Widget bookMarkWidget;
 
-  // Change to bookmark icon.
+  // TODO Change to bookmark icon.
   if (_isSavedToDB) {
     bookMarkWidget = IconButton(
       icon: Text('Remove'),
