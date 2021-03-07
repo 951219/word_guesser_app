@@ -105,9 +105,9 @@ getBody(BuildContext context, Word word) async {
 }
 
 List<Widget> _getTextWidgets(List<String> strings) {
-  List list = new List<Widget>();
-  for (var i = 0; i < strings.length; i++) {
-    list.add(Text('* ${strings[i]}'));
+  List<Widget> list = [];
+  for (String meaning in strings) {
+    list.add(Text('* $meaning'));
   }
   return list;
 }
