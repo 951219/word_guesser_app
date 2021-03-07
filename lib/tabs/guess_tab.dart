@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/word_services.dart';
 
 class GuessTab extends StatefulWidget {
   @override
@@ -8,9 +9,10 @@ class GuessTab extends StatefulWidget {
 class _GuessTabState extends State<GuessTab> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Guessing tab'),
+    fetchBundle(context);
+    return Scaffold(
+      body: Center(
+        child: Text('Guess now! '),
       ),
     );
   }
