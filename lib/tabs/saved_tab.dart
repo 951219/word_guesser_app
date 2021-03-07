@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/models/word.dart';
-import 'package:word_guesser_app/routes/word_page.dart';
+import 'package:word_guesser_app/routes/word_route.dart';
 import '../services/user_services.dart';
 import '../services/word_services.dart';
 

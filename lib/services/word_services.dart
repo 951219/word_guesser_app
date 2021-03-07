@@ -8,7 +8,6 @@ import 'package:word_guesser_app/services/user_services.dart';
 import '../constants.dart' as constants;
 import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO delete word
 // TODO update score
 // TODO if an userDB is updated, then it should force fetch the userdata again.
 fetchWord(String word, BuildContext context) async {

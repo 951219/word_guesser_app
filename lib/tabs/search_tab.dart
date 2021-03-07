@@ -1,6 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:word_guesser_app/routes/word_page.dart';
+import 'package:word_guesser_app/routes/word_route.dart';
 import '../services/word_services.dart';
 import '../constants.dart' as constants;
 

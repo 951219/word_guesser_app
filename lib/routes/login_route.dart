@@ -127,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 20,
               ),
-              FlatButton(
+              TextButton(
                   child: Text('Forgot Password'),
                   onPressed: () {
                     Flushbar(
