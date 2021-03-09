@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/models/word.dart';
 import '../services/word_services.dart';
@@ -16,14 +17,6 @@ class _GuessTabState extends State<GuessTab> {
   }
 }
 
-Widget answerButton(Word word) {
-  return ElevatedButton(
-      onPressed: () {
-        // TODO
-      },
-      child: Text(word.word));
-}
-
 List<Widget> _getTextWidgets(List<String> strings) {
   List<Widget> list = [];
   for (String meaning in strings) {
@@ -32,76 +25,76 @@ List<Widget> _getTextWidgets(List<String> strings) {
   return list;
 }
 
-Scaffold getBody(BuildContext context) {
+Container getBody(BuildContext context) {
   List<Word> list = [];
   Word correctWord;
-  return Scaffold(
-    body: Container(
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            FutureBuilder(
-              future: fetchBundle(context),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  list = snapshot.data;
-                  correctWord = list[Random().nextInt(list.length)];
-                  list.shuffle();
 
-                  // TODO add infobutton to see definitions
-                  // TODO get 3 randoms and add them to widget with the correct one as well. -> shuffle
-                  return Column(
+  List<Widget> topPart;
+  Widget firstOption;
+  Widget secondOption;
+  Widget thirdOption;
+  Widget fourthOption;
+
+  FutureBuilder(
+    future: fetchBundle(context),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        list = snapshot.data;
+        correctWord = list[Random().nextInt(list.length)];
+        list.shuffle();
+
+        // TODO add infobutton to see definitions
+        // TODO get 3 randoms and add them to widget with the correct one as well. -> shuffle
+
+        topPart = _getTextWidgets(correctWord.meaning);
+        firstOption = Text(list[0].word);
+        secondOption = Text(list[1].word);
+        thirdOption = Text(list[2].word);
+        fourthOption = Text(list[3].word);
+        return Flushbar(
+          message: "We got the data!",
+          duration: Duration(seconds: 3),
+        )..show(context);
+      } else {
+        topPart = [CircularProgressIndicator()];
+        firstOption = CircularProgressIndicator();
+        secondOption = CircularProgressIndicator();
+        thirdOption = CircularProgressIndicator();
+        fourthOption = CircularProgressIndicator();
+      }
+    },
+  );
+
+  return Container(
+    child: Padding(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        children: [
+          Container(child: Column(children: topPart ?? [Container()])),
+          Container(
+            color: Colors.greenAccent,
+            child: Center(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: _getTextWidgets(correctWord.meaning)),
-                      ),
-                      Container(
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: Text(list[0].word)),
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: Text(list[1].word))
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: Text(list[2].word)),
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: Text(list[3].word))
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
+                      TextButton(onPressed: () {}, child: firstOption),
+                      TextButton(onPressed: () {}, child: secondOption)
                     ],
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            )
-          ],
-        ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(onPressed: () {}, child: thirdOption),
+                      TextButton(onPressed: () {}, child: fourthOption)
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     ),
   );
