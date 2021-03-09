@@ -10,44 +10,9 @@ class GuessTab extends StatefulWidget {
 }
 
 class _GuessTabState extends State<GuessTab> {
-  List<Word> list = [];
-  Word correctWord;
-  // final _random = new Random();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: fetchBundle(context),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            list = snapshot.data;
-            correctWord = list[Random().nextInt(list.length)];
-            list.remove(correctWord);
-
-            // TODO add infobutton to see definitions
-            // TODO get 3 randoms and add them to widget with the correct one as well. -> shuffle
-            return Container(
-                child: Column(
-              children: [
-                Container(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: _getTextWidgets(correctWord.meaning)),
-                ),
-                Container(
-                    // TODO buttons
-                    )
-              ],
-            ));
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-    );
+    return getBody(context);
   }
 }
 
@@ -66,3 +31,80 @@ List<Widget> _getTextWidgets(List<String> strings) {
   }
   return list;
 }
+
+Scaffold getBody(BuildContext context) {
+  List<Word> list = [];
+  Word correctWord;
+  return Scaffold(
+    body: Container(
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            FutureBuilder(
+              future: fetchBundle(context),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  list = snapshot.data;
+                  correctWord = list[Random().nextInt(list.length)];
+                  list.shuffle();
+
+                  // TODO add infobutton to see definitions
+                  // TODO get 3 randoms and add them to widget with the correct one as well. -> shuffle
+                  return Column(
+                    children: [
+                      Container(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: _getTextWidgets(correctWord.meaning)),
+                      ),
+                      Container(
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextButton(
+                                      onPressed: () {},
+                                      child: Text(list[0].word)),
+                                  TextButton(
+                                      onPressed: () {},
+                                      child: Text(list[1].word))
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextButton(
+                                      onPressed: () {},
+                                      child: Text(list[2].word)),
+                                  TextButton(
+                                      onPressed: () {},
+                                      child: Text(list[3].word))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            )
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+// TODO checkIfCorrect()

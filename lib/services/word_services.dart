@@ -43,7 +43,7 @@ fetchWord(String word, BuildContext context) async {
 }
 
 Future<List<dynamic>> fetchBundle(BuildContext context) async {
-  const wordAmount = 12;
+  const wordAmount = 4;
 
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = '${constants.DOMAIN}/est/random/$wordAmount';
