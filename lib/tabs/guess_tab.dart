@@ -12,31 +12,50 @@ class GuessTab extends StatefulWidget {
 class _GuessTabState extends State<GuessTab> {
   @override
   Widget build(BuildContext context) {
-    return getBody(context);
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 7,
+            child: FutureBuilder(
+              future: getGuessingWindow(context),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data;
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                Center(
+                  child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          return build(context);
+                        });
+                      },
+                      child: Text('Refresh')),
+                ),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
-Scaffold getBody(BuildContext context) {
-  return Scaffold(
-    body: FutureBuilder(
-      future: fetchBundle(context),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return getGuessingWindow(snapshot.data);
-
-          // TODO add infobutton to see definitions
-          // TODO get 3 randoms and add them to widget with the correct one as well. -> shuffle
-
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      },
-    ),
-  );
-}
-
-Widget getGuessingWindow(List<Word> words) {
-  List<Word> list = words;
+getGuessingWindow(BuildContext context) async {
+  List<Word> list = await fetchBundle(context);
   list.shuffle();
   Word correctWord = list[Random().nextInt(list.length)];
 
@@ -74,13 +93,12 @@ Widget getGuessingWindow(List<Word> words) {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     ),
   );
 }
 // TODO checkIfCorrect()
-
-// TODO Next button
 // TODO onLongpress() => fetch the word and show word route
+// TODO add infobutton to see definitions
