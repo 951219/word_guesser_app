@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/models/word.dart';
 import '../services/word_services.dart';
@@ -17,53 +16,35 @@ class _GuessTabState extends State<GuessTab> {
   }
 }
 
-List<Widget> _getTextWidgets(List<String> strings) {
-  List<Widget> list = [];
-  for (String meaning in strings) {
-    list.add(Text('* $meaning'));
-  }
-  return list;
+Scaffold getBody(BuildContext context) {
+  return Scaffold(
+    body: FutureBuilder(
+      future: fetchBundle(context),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return getGuessingWindow(snapshot.data);
+
+          // TODO add infobutton to see definitions
+          // TODO get 3 randoms and add them to widget with the correct one as well. -> shuffle
+
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    ),
+  );
 }
 
-Container getBody(BuildContext context) {
-  List<Word> list = [];
-  Word correctWord;
+Widget getGuessingWindow(List<Word> words) {
+  List<Word> list = words;
+  list.shuffle();
+  Word correctWord = list[Random().nextInt(list.length)];
 
-  List<Widget> topPart;
-  Widget firstOption;
-  Widget secondOption;
-  Widget thirdOption;
-  Widget fourthOption;
-
-  FutureBuilder(
-    future: fetchBundle(context),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        list = snapshot.data;
-        correctWord = list[Random().nextInt(list.length)];
-        list.shuffle();
-
-        // TODO add infobutton to see definitions
-        // TODO get 3 randoms and add them to widget with the correct one as well. -> shuffle
-
-        topPart = _getTextWidgets(correctWord.meaning);
-        firstOption = Text(list[0].word);
-        secondOption = Text(list[1].word);
-        thirdOption = Text(list[2].word);
-        fourthOption = Text(list[3].word);
-        return Flushbar(
-          message: "We got the data!",
-          duration: Duration(seconds: 3),
-        )..show(context);
-      } else {
-        topPart = [CircularProgressIndicator()];
-        firstOption = CircularProgressIndicator();
-        secondOption = CircularProgressIndicator();
-        thirdOption = CircularProgressIndicator();
-        fourthOption = CircularProgressIndicator();
-      }
-    },
-  );
+  List<Text> topPart = correctWord.meaning.map((e) => Text('* $e')).toList();
+  Widget firstOption = Text(list[0].word);
+  Widget secondOption = Text(list[1].word);
+  Widget thirdOption = Text(list[2].word);
+  Widget fourthOption = Text(list[3].word);
 
   return Container(
     child: Padding(
@@ -99,5 +80,7 @@ Container getBody(BuildContext context) {
     ),
   );
 }
-
 // TODO checkIfCorrect()
+
+// TODO Next button
+// TODO onLongpress() => fetch the word and show word route
