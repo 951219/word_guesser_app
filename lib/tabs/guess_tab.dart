@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/models/word.dart';
 import '../services/word_services.dart';
+import '../constants.dart' as constants;
 
 class GuessTab extends StatefulWidget {
   @override
@@ -58,12 +60,42 @@ getGuessingWindow(BuildContext context) async {
   List<Word> list = await fetchBundle(context);
   list.shuffle();
   Word correctWord = list[Random().nextInt(list.length)];
+//  TODO add disableButton if pressed.
 
-  List<Text> topPart = correctWord.meaning.map((e) => Text('* $e')).toList();
-  Widget firstOption = Text(list[0].word);
-  Widget secondOption = Text(list[1].word);
-  Widget thirdOption = Text(list[2].word);
-  Widget fourthOption = Text(list[3].word);
+  Widget getBtn(String word) {
+    return ElevatedButton(
+      child: Text(word, style: TextStyle(color: Colors.black)),
+      onPressed: () => {
+        if (checkIfCorrect(correctWord, word))
+          {
+            Flushbar(
+              message: "Correct! Yay!!!",
+              duration: Duration(seconds: 3),
+            ).show(context)
+          }
+        else
+          {
+            Flushbar(
+              message: "Nope, try again.",
+              duration: Duration(seconds: 3),
+            )..show(context)
+          },
+      },
+    );
+  }
+
+  List<Text> topPart = correctWord.meaning
+      .map(
+        (e) => Text(
+          '* $e',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      )
+      .toList();
+  Widget firstOption = getBtn(list[0].word);
+  Widget secondOption = getBtn(list[1].word);
+  Widget thirdOption = getBtn(list[2].word);
+  Widget fourthOption = getBtn(list[3].word);
 
   return Container(
     child: Padding(
@@ -72,23 +104,16 @@ getGuessingWindow(BuildContext context) async {
         children: [
           Container(child: Column(children: topPart ?? [Container()])),
           Container(
-            color: Colors.greenAccent,
             child: Center(
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(onPressed: () {}, child: firstOption),
-                      TextButton(onPressed: () {}, child: secondOption)
-                    ],
+                    children: [firstOption, secondOption],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(onPressed: () {}, child: thirdOption),
-                      TextButton(onPressed: () {}, child: fourthOption)
-                    ],
+                    children: [thirdOption, fourthOption],
                   ),
                 ],
               ),
@@ -107,5 +132,8 @@ bool checkIfCorrect(Word correctWord, String word) {
     return false;
   }
 }
+
+// TODO positioning on the page
+// TODO report brokenBundle()
 // TODO onLongpress() => fetch the word and show word route
 // TODO add infobutton to see definitions
