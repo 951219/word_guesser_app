@@ -4,7 +4,6 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/models/word.dart';
 import '../services/word_services.dart';
-import '../constants.dart' as constants;
 
 class GuessTab extends StatefulWidget {
   @override
@@ -60,28 +59,29 @@ getGuessingWindow(BuildContext context) async {
   List<Word> list = await fetchBundle(context);
   list.shuffle();
   Word correctWord = list[Random().nextInt(list.length)];
-//  TODO add disableButton if pressed.
+  bool btnEnabled = true;
 
-  Widget getBtn(String word) {
+  Widget getBtn(String word, bool isEnabled) {
     return ElevatedButton(
-      child: Text(word, style: TextStyle(color: Colors.black)),
-      onPressed: () => {
-        if (checkIfCorrect(correctWord, word))
-          {
-            Flushbar(
-              message: "Correct! Yay!!!",
-              duration: Duration(seconds: 3),
-            ).show(context)
-          }
-        else
-          {
-            Flushbar(
-              message: "Nope, try again.",
-              duration: Duration(seconds: 3),
-            )..show(context)
-          },
-      },
-    );
+        child: Text(word, style: TextStyle(color: Colors.black)),
+        onPressed: isEnabled
+            ? () => {
+                  if (checkIfCorrect(correctWord, word))
+                    {
+                      Flushbar(
+                        message: "Correct! Yay!!!",
+                        duration: Duration(seconds: 3),
+                      ).show(context)
+                    }
+                  else
+                    {
+                      Flushbar(
+                        message: "Nope, try again.",
+                        duration: Duration(seconds: 3),
+                      )..show(context)
+                    },
+                }
+            : null);
   }
 
   List<Text> topPart = correctWord.meaning
@@ -92,10 +92,10 @@ getGuessingWindow(BuildContext context) async {
         ),
       )
       .toList();
-  Widget firstOption = getBtn(list[0].word);
-  Widget secondOption = getBtn(list[1].word);
-  Widget thirdOption = getBtn(list[2].word);
-  Widget fourthOption = getBtn(list[3].word);
+  Widget firstOption = getBtn(list[0].word, btnEnabled);
+  Widget secondOption = getBtn(list[1].word, btnEnabled);
+  Widget thirdOption = getBtn(list[2].word, btnEnabled);
+  Widget fourthOption = getBtn(list[3].word, btnEnabled);
 
   return Container(
     child: Padding(
