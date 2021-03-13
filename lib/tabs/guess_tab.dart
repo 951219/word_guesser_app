@@ -99,6 +99,13 @@ getGuessingWindow(BuildContext context) async {
     ),
   );
 }
-// TODO checkIfCorrect()
+
+bool checkIfCorrect(Word correctWord, String word) {
+  if (correctWord.word == word) {
+    return true;
+  } else {
+    return false;
+  }
+}
 // TODO onLongpress() => fetch the word and show word route
 // TODO add infobutton to see definitions
