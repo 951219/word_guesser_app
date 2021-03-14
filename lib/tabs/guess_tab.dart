@@ -4,6 +4,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/models/word.dart';
 import '../services/word_services.dart';
+import '../constants.dart' as constants;
 
 class GuessTab extends StatefulWidget {
   @override
@@ -17,8 +18,7 @@ class _GuessTabState extends State<GuessTab> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            flex: 7,
+          Container(
             child: FutureBuilder(
               future: getGuessingWindow(context),
               builder: (context, snapshot) {
@@ -30,23 +30,19 @@ class _GuessTabState extends State<GuessTab> {
               },
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                Center(
-                  child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          return build(context);
-                        });
-                      },
-                      child: Text('Refresh')),
-                ),
-                SizedBox(
-                  height: 20,
-                )
-              ],
+          Container(
+            height: 100,
+            child: Center(
+              child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      return build(context);
+                    });
+                  },
+                  child: Text(
+                    'Refresh',
+                    style: TextStyle(color: constants.cyan),
+                  )),
             ),
           ),
         ],
@@ -63,7 +59,10 @@ getGuessingWindow(BuildContext context) async {
 
   Widget getBtn(String word, bool isEnabled) {
     return ElevatedButton(
-        child: Text(word, style: TextStyle(color: Colors.black)),
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(constants.cyan)),
+        child: Text(word,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         onPressed: isEnabled
             ? () => {
                   if (checkIfCorrect(correctWord, word))
@@ -137,3 +136,5 @@ bool checkIfCorrect(Word correctWord, String word) {
 // TODO report brokenBundle()
 // TODO onLongpress() => fetch the word and show word route
 // TODO add infobutton to see definitions
+// Text("Fetch word",
+// style: TextStyle(fontSize: 32, color: Colors.white)))
