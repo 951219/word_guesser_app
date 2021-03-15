@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/models/word.dart';
+import 'package:word_guesser_app/routes/word_route.dart';
 import '../services/word_services.dart';
 import '../constants.dart' as constants;
 
@@ -59,28 +60,36 @@ getGuessingWindow(BuildContext context) async {
 
   Widget getBtn(String word, bool isEnabled) {
     return ElevatedButton(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(constants.cyan)),
-        child: Text(word,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        onPressed: isEnabled
-            ? () => {
-                  if (checkIfCorrect(correctWord, word))
-                    {
-                      Flushbar(
-                        message: "Correct! Yay!!!",
-                        duration: Duration(seconds: 3),
-                      ).show(context)
-                    }
-                  else
-                    {
-                      Flushbar(
-                        message: "Nope, try again.",
-                        duration: Duration(seconds: 3),
-                      )..show(context)
-                    },
-                }
-            : null);
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(constants.cyan)),
+      child: Text("${word[0].toUpperCase()}${word.substring(1)}",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      onPressed: isEnabled
+          ? () => {
+                if (checkIfCorrect(correctWord, word))
+                  {
+                    Flushbar(
+                      message: "Correct! Yay!!!",
+                      duration: Duration(seconds: 3),
+                    ).show(context)
+                  }
+                else
+                  {
+                    Flushbar(
+                      message: "Nope, try again.",
+                      duration: Duration(seconds: 3),
+                    )..show(context)
+                  },
+              }
+          : null,
+      onLongPress: () async {
+        var wordObject = await fetchWord(word, context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => WordPage(word: wordObject)),
+        );
+      },
+    );
   }
 
   List<Text> topPart = correctWord.meaning
