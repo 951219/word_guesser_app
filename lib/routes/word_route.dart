@@ -19,8 +19,53 @@ class WordPage extends StatefulWidget {
 class _WordPageState extends State<WordPage> {
   @override
   Widget build(BuildContext context) {
+    var wordId = widget.word.wordId;
+    bool isInDB;
     return Scaffold(
-      appBar: getAppBar(context, widget.word.wordId),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        actions: [
+          Container(
+            child: FutureBuilder(
+              future: userHasWord(context, wordId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data == true) {
+                    isInDB = true;
+                    return IconButton(
+                      icon: Icon(Icons.bookmark),
+                      color: Colors.black,
+                      onPressed: () async {
+                        await removeFromUserDB(context, wordId);
+                        setState(() {
+                          isInDB = false;
+                        });
+                      },
+                    );
+                  } else {
+                    isInDB = false;
+                    return IconButton(
+                      icon: Icon(Icons.bookmark_border),
+                      color: Colors.black,
+                      onPressed: () async {
+                        await saveToUserDB(context, wordId);
+                        setState(() {
+                          isInDB = true;
+                        });
+                      },
+                    );
+                  }
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+          )
+        ],
+      ),
       body: FutureBuilder(
           future: getBody(context, widget.word),
           builder: (context, snapshot) {
@@ -110,50 +155,4 @@ List<Widget> _getTextWidgets(List<String> strings) {
     list.add(Text('* $meaning'));
   }
   return list;
-}
-
-getAppBar(BuildContext context, int wordId) {
-  return AppBar(
-    backgroundColor: Colors.white,
-    iconTheme: IconThemeData(
-      color: Colors.black,
-    ),
-    actions: [
-      Container(
-        child: FutureBuilder(
-          future: bookMarkWidget(context, wordId),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data;
-            } else {
-              return CircularProgressIndicator();
-            }
-          },
-        ),
-      )
-    ],
-  );
-}
-
-Future<Widget> bookMarkWidget(BuildContext context, int wordId) async {
-  bool _isSavedToDB = await userHasWord(context, wordId) ?? false;
-
-  // TODO Change to bookmark icon.
-  if (_isSavedToDB) {
-    return IconButton(
-      icon: Icon(Icons.bookmark),
-      color: Colors.black,
-      onPressed: () async {
-        await removeFromUserDB(context, wordId);
-      },
-    );
-  } else {
-    return IconButton(
-      icon: Icon(Icons.bookmark_border),
-      color: Colors.black,
-      onPressed: () async {
-        await saveToUserDB(context, wordId);
-      },
-    );
-  }
 }
