@@ -20,9 +20,15 @@ class _WordPageState extends State<WordPage> {
   @override
   Widget build(BuildContext context) {
     var wordId = widget.word.wordId;
+    String word = widget.word.word;
     bool isInDB;
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          "${word[0].toUpperCase()}${word.substring(1)}",
+          style: TextStyle(
+              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(
           color: Colors.black,
@@ -63,7 +69,20 @@ class _WordPageState extends State<WordPage> {
                 }
               },
             ),
-          )
+          ),
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: Container(
+                  child: InkWell(
+                    child: Text('Broken'),
+                    onTap: () {},
+                  ),
+                ),
+              ),
+            ],
+            icon: Icon(Icons.settings_rounded),
+          ),
         ],
       ),
       body: FutureBuilder(
@@ -83,7 +102,6 @@ class _WordPageState extends State<WordPage> {
 
 getBody(BuildContext context, Word word) async {
   // TODO Single child scrollable view so longer data would not break the view
-  // TODO show modal before and then load data so this would prevent spamming.
 
   return Container(
     child: Padding(
@@ -91,36 +109,6 @@ getBody(BuildContext context, Word word) async {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  word.word.toUpperCase(),
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  children: [
-                    // TODO move to appBar()
-                    PopupMenuButton(
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          child: Container(
-                            child: InkWell(
-                              child: Text('Broken'),
-                              onTap: () {},
-                            ),
-                          ),
-                        ),
-                      ],
-                      icon: Icon(Icons.settings_rounded, size: 30),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
           SizedBox(
             height: 10,
           ),
