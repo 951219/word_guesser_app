@@ -16,6 +16,23 @@ class _GuessTabState extends State<GuessTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        elevation: 0,
+        child: Container(
+          height: 50,
+          width: MediaQuery.of(context).size.width,
+          child: TextButton(
+              onPressed: () {
+                setState(() {
+                  return build(context);
+                });
+              },
+              child: Text(
+                'Refresh',
+                style: TextStyle(color: constants.cyan),
+              )),
+        ),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -29,21 +46,6 @@ class _GuessTabState extends State<GuessTab> {
                   return Center(child: CircularProgressIndicator());
                 }
               },
-            ),
-          ),
-          Container(
-            height: 100,
-            child: Center(
-              child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      return build(context);
-                    });
-                  },
-                  child: Text(
-                    'Refresh',
-                    style: TextStyle(color: constants.cyan),
-                  )),
             ),
           ),
         ],
