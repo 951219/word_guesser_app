@@ -44,7 +44,7 @@ class _SearchTabState extends State<SearchTab> {
                     if (_wordFieldController.text.length == 0) {
                       Flushbar(
                         message: "Hey dummy! Make sure you entered a word.",
-                        duration: Duration(seconds: 3),
+                        duration: Duration(milliseconds: 1500),
                       )..show(context).then(
                           (value) => setState(() {
                             _isLoading = false;
@@ -57,7 +57,7 @@ class _SearchTabState extends State<SearchTab> {
                         Flushbar(
                           message:
                               "The DB could not find this word ${_wordFieldController.text}, check for typos.",
-                          duration: Duration(seconds: 3),
+                          duration: Duration(milliseconds: 1500),
                         )..show(context).then(
                             (value) => setState(() {
                               _isLoading = false;

@@ -15,6 +15,7 @@ class GuessTab extends StatefulWidget {
 class _GuessTabState extends State<GuessTab> {
   @override
   Widget build(BuildContext context) {
+    // TODO - Add language switch to the top ENG/EST
     return Scaffold(
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
@@ -140,7 +141,4 @@ bool checkIfCorrect(Word correctWord, String word) {
 
 // TODO positioning on the page
 // TODO report brokenBundle()
-// TODO onLongpress() => fetch the word and show word route
 // TODO add infobutton to see definitions
-// Text("Fetch word",
-// style: TextStyle(fontSize: 32, color: Colors.white)))

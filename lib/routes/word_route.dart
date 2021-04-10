@@ -35,6 +35,8 @@ class _WordPageState extends State<WordPage> {
         ),
         actions: [
           Container(
+            // TODO - pulling the data each time, the user words should be saved
+            // to the local storage and only be updated if there is add or delete/time passes
             child: FutureBuilder(
               future: userHasWord(context, wordId),
               builder: (context, snapshot) {
