@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                             Flushbar(
                               message:
                                   "Hey dummy! Make sure you entered both password and username",
-                              duration: Duration(seconds: 3),
+                              duration: Duration(seconds: 2),
                             )..show(context);
                           } else {
                             setState(() {
@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                               Flushbar(
                                 message:
                                     "Oopsie! Server said no-no, please check your credentials",
-                                duration: Duration(seconds: 3),
+                                duration: Duration(seconds: 2),
                               )..show(context).then(
                                   (value) => setState(
                                     () {
@@ -132,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     Flushbar(
                       message: "Psst! This part is not yet ready",
-                      duration: Duration(seconds: 3),
+                      duration: Duration(seconds: 2),
                     )..show(context);
                   })
             ],

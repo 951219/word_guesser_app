@@ -40,6 +40,9 @@ Future<bool> singIn(
   } else if (res.statusCode == 400) {
     print("Wrong data - Response status: ${res.statusCode}");
     return false;
+  } else if (res.statusCode == 405) {
+    print("Not allowed - Response status: ${res.statusCode}");
+    return false;
   } else {
     print("Error: Response status: ${res.statusCode}");
     return false;
@@ -58,13 +61,18 @@ Future<void> logOut(BuildContext context) async {
   var res = await http.post(url, body: body);
 
   if (res.statusCode == 204) {
-    sharedPreferences.clear();
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (BuildContext context) => LoginPage(),
-        ),
-        (Route<dynamic> route) => false);
-    print('User logged out');
+    bool prefsCleared = await sharedPreferences.clear();
+    if (prefsCleared) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (BuildContext context) => LoginPage(),
+          ),
+          (Route<dynamic> route) => false);
+      print('prefs cleared');
+      print('User logged out');
+    } else {
+      print('preds not cleared');
+    }
   } else {
     jsonResponse = json.decode(res.body);
     print(
@@ -106,7 +114,7 @@ Future<bool> syncIsLoggedIn() async {
     }
   } else {
     print("No refreshToken/accessToken in sharedprefs");
-    // logOut();
+    sharedPreferences.clear();
     loggedIn = false;
   }
   return loggedIn;
