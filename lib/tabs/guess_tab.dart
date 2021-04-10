@@ -33,22 +33,17 @@ class _GuessTabState extends State<GuessTab> {
               )),
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            child: FutureBuilder(
-              future: getGuessingWindow(context),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return snapshot.data;
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-          ),
-        ],
+      body: FutureBuilder(
+        future: getGuessingWindow(context),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [snapshot.data]);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }

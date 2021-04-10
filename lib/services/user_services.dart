@@ -40,7 +40,7 @@ Future<bool> singIn(
   } else if (res.statusCode == 400) {
     print("Wrong data - Response status: ${res.statusCode}");
     return false;
-  } else if (res.statusCode == 405) {
+  } else if (res.statusCode == 401) {
     print("Not allowed - Response status: ${res.statusCode}");
     return false;
   } else {
@@ -56,7 +56,6 @@ Future<void> logOut(BuildContext context) async {
   Map body = {
     "token": sharedPreferences.getString('refreshToken'),
   };
-  // TODO IF logout and log back in, it does not check the credentials and it will break the app
   var jsonResponse;
   var res = await http.post(url, body: body);
 
