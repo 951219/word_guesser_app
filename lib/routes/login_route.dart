@@ -128,13 +128,38 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
               TextButton(
-                  child: Text('Forgot Password'),
-                  onPressed: () {
+                child: Text('Sign up'),
+                onPressed: () async {
+                  if (_usernameController.text.length == 0 ||
+                      _passwordController.text.length == 0) {
                     Flushbar(
-                      message: "Psst! This part is not yet ready",
+                      message:
+                          "Hey! You need to enter both password and username to sign up!",
                       duration: Duration(milliseconds: 1500),
                     )..show(context);
-                  })
+                  } else {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    var result = await signUp(_usernameController.text,
+                        _passwordController.text, context);
+                    if (result) {
+                      Flushbar(
+                        message: "Account created! You can now log in.",
+                        duration: Duration(milliseconds: 1500),
+                      )..show(context);
+                    } else {
+                      Flushbar(
+                        message: "Something went wrong with signing up!",
+                        duration: Duration(milliseconds: 1500),
+                      )..show(context);
+                    }
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+                },
+              ),
             ],
           ),
         ),
