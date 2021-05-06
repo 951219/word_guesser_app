@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:word_guesser_app/tabs/search_tab.dart' as search;
 import 'package:word_guesser_app/tabs/saved_tab.dart' as saved;
 import 'package:word_guesser_app/tabs/guess_tab.dart' as guess;
+import 'package:word_guesser_app/tabs/new_guess_tab.dart' as newguesstab;
 import '../constants.dart' as constants;
 import '../services/user_services.dart';
 
@@ -17,7 +18,7 @@ class _EntryPageState extends State<EntryPage>
   @override
   void initState() {
     super.initState();
-    tabController = new TabController(length: 3, vsync: this);
+    tabController = new TabController(length: 4, vsync: this);
   }
 
   @override
@@ -48,6 +49,7 @@ class _EntryPageState extends State<EntryPage>
           unselectedLabelColor: constants.unSelected,
           labelColor: constants.cyan,
           tabs: [
+            Tab(text: 'NewGuess'),
             Tab(text: 'Guess'),
             Tab(text: 'Search'),
             Tab(text: 'Saved'),
@@ -57,6 +59,7 @@ class _EntryPageState extends State<EntryPage>
       body: TabBarView(
         controller: tabController,
         children: [
+          newguesstab.NewGuessTab(),
           guess.GuessTab(),
           search.SearchTab(),
           saved.SavedTab(),
