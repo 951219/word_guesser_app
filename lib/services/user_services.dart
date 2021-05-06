@@ -50,6 +50,24 @@ Future<bool> singIn(
   return false;
 }
 
+Future<bool> signUp(
+    String username, String password, BuildContext context) async {
+  String url = "${constants.DOMAIN}/user/signup";
+
+  Map body = {"username": username.toLowerCase(), "password": password};
+
+  var res = await http.post(url, body: body);
+
+  if (res.statusCode == 201) {
+    print("Response status: ${res.statusCode}");
+    print("User created!");
+    return true;
+  } else {
+    print("Error: Response status: ${res.statusCode}");
+    return false;
+  }
+}
+
 Future<void> logOut(BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String url = "${constants.DOMAIN}/user/logout";
