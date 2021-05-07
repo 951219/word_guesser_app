@@ -24,14 +24,7 @@ class _EntryPageState extends State<EntryPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-              icon: Icon(Icons.logout, color: Colors.black),
-              tooltip: 'Log out',
-              onPressed: () async {
-                await logOut(context);
-              }),
-        ],
+        iconTheme: IconThemeData(color: Colors.black),
         elevation: 0.0,
         backgroundColor: Colors.white,
         title: Text(
@@ -51,6 +44,30 @@ class _EntryPageState extends State<EntryPage>
             Tab(text: 'Guess'),
             Tab(text: 'Search'),
             Tab(text: 'Saved'),
+          ],
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Text(
+                constants.appName,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              decoration: BoxDecoration(color: constants.cyan),
+            ),
+            ListTile(
+              trailing: Icon(Icons.logout, color: Colors.black),
+              title: Text("Log out"),
+              onTap: () async {
+                await logOut(context);
+              },
+            )
           ],
         ),
       ),
