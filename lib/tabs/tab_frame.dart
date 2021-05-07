@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_guesser_app/tabs/search_tab.dart' as search;
 import 'package:word_guesser_app/tabs/saved_tab.dart' as saved;
@@ -51,16 +52,28 @@ class _EntryPageState extends State<EntryPage>
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              child: Text(
-                constants.appName,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+            Container(
+              height: 120,
+              child: DrawerHeader(
+                child: Text(
+                  constants.appName,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                decoration: BoxDecoration(color: constants.cyan),
               ),
-              decoration: BoxDecoration(color: constants.cyan),
             ),
+            ListTile(
+                trailing: Icon(Icons.portrait, color: Colors.black),
+                title: Text("Profile"),
+                onTap: () {
+                  Flushbar(
+                    message: "Not implemented yet...",
+                    duration: Duration(seconds: 3),
+                  )..show(context);
+                }),
             ListTile(
               trailing: Icon(Icons.logout, color: Colors.black),
               title: Text("Log out"),

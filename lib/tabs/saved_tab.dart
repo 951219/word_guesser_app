@@ -70,11 +70,11 @@ class _SavedTabState extends State<SavedTab> {
                     "${word[0].toUpperCase()}${word.substring(1)}",
                     style: TextStyle(fontSize: 24),
                   ),
-                  Text(
-                    "item",
-                    // TODO add data
-                    style: TextStyle(fontSize: 17),
-                  ),
+                  // Text(
+                  //   "item",
+                  //   // TODO add data
+                  //   style: TextStyle(fontSize: 17),
+                  // ),
                 ],
               )
             ],

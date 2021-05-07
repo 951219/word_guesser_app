@@ -38,9 +38,7 @@ class _GuessTabState extends State<GuessTab> {
         future: getGuessingWindow(context),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [snapshot.data]);
+            return snapshot.data;
           } else {
             return Center(child: CircularProgressIndicator());
           }
@@ -68,14 +66,14 @@ getGuessingWindow(BuildContext context) async {
                   {
                     Flushbar(
                       message: "Correct! Yay!!!",
-                      duration: Duration(seconds: 3),
+                      duration: Duration(milliseconds: 1500),
                     ).show(context)
                   }
                 else
                   {
                     Flushbar(
                       message: "Nope, try again.",
-                      duration: Duration(seconds: 3),
+                      duration: Duration(milliseconds: 1500),
                     )..show(context)
                   },
               }
@@ -90,11 +88,14 @@ getGuessingWindow(BuildContext context) async {
     );
   }
 
-  List<Text> topPart = correctWord.meaning
+  List<Container> topPart = correctWord.meaning
       .map(
-        (e) => Text(
-          '* $e',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        (e) => Container(
+          padding: EdgeInsets.only(top: 5),
+          child: Text(
+            '* $e',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
         ),
       )
       .toList();
@@ -107,8 +108,23 @@ getGuessingWindow(BuildContext context) async {
     child: Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(child: Column(children: topPart ?? [Container()])),
+          // TODO make the top part scrollable so bigger text wont break it
+          Column(children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                "Can you guess the word?",
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: topPart ?? [Container()])),
+          ]),
+
           Container(
             child: Center(
               child: Column(

@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:word_guesser_app/models/word.dart';
@@ -21,7 +22,8 @@ class _WordPageState extends State<WordPage> {
   Widget build(BuildContext context) {
     var wordId = widget.word.wordId;
     String word = widget.word.word;
-    bool isInDB;
+
+    // TODO refactor is in DB to prevent delay when saving
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -42,32 +44,41 @@ class _WordPageState extends State<WordPage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data == true) {
-                    isInDB = true;
                     return IconButton(
                       icon: Icon(Icons.bookmark),
                       color: Colors.black,
                       onPressed: () async {
+                        Flushbar(
+                          message: "Removed $word from DB",
+                          duration: Duration(milliseconds: 1500),
+                        )..show(context);
                         await removeFromUserDB(context, wordId);
                         setState(() {
-                          isInDB = false;
+                          build(context);
                         });
                       },
                     );
                   } else {
-                    isInDB = false;
                     return IconButton(
                       icon: Icon(Icons.bookmark_border),
                       color: Colors.black,
                       onPressed: () async {
+                        Flushbar(
+                          message: "Added $word to DB",
+                          duration: Duration(milliseconds: 1500),
+                        )..show(context);
                         await saveToUserDB(context, wordId);
                         setState(() {
-                          isInDB = true;
+                          build(context);
                         });
                       },
                     );
                   }
                 } else {
-                  return CircularProgressIndicator();
+                  return IconButton(
+                    icon: Icon(Icons.bookmark_border),
+                    onPressed: null,
+                  );
                 }
               },
             ),
@@ -75,14 +86,24 @@ class _WordPageState extends State<WordPage> {
           PopupMenuButton(
             itemBuilder: (context) => [
               PopupMenuItem(
-                child: Container(
-                  child: InkWell(
-                    child: Text('Broken'),
-                    onTap: () {},
-                  ),
-                ),
+                enabled: false,
+                child: Text('Google it'),
+                value: 0,
+              ),
+              PopupMenuItem(
+                enabled: false,
+                child: Text('Report broken'),
+                value: 1,
               ),
             ],
+            onSelected: (value) {
+              Flushbar(
+                message: "Congratz, you pressed $value",
+                duration: Duration(milliseconds: 1500),
+              )..show(context);
+              // TODO Google it
+              // TODO Report it
+            },
             icon: Icon(Icons.settings_rounded),
           ),
         ],
@@ -114,6 +135,7 @@ getBody(BuildContext context, Word word) async {
           SizedBox(
             height: 10,
           ),
+          // TODO if no definitions, show an error
           Text(
             'Definitions:',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -125,6 +147,7 @@ getBody(BuildContext context, Word word) async {
           SizedBox(
             height: 20,
           ),
+          // TODO if no examples, show an error
           Text(
             'Examples:',
             style: TextStyle(fontWeight: FontWeight.bold),
