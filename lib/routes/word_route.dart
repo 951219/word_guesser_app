@@ -2,6 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:word_guesser_app/models/word.dart';
+import 'package:word_guesser_app/routes/webview_route.dart';
 
 import '../services/user_services.dart';
 
@@ -20,6 +21,7 @@ class WordPage extends StatefulWidget {
 class _WordPageState extends State<WordPage> {
   @override
   Widget build(BuildContext context) {
+    // TODO refactor so if would not pull a new word on each rebuild
     var wordId = widget.word.wordId;
     String word = widget.word.word;
 
@@ -86,7 +88,6 @@ class _WordPageState extends State<WordPage> {
           PopupMenuButton(
             itemBuilder: (context) => [
               PopupMenuItem(
-                enabled: false,
                 child: Text('Google it'),
                 value: 0,
               ),
@@ -97,10 +98,17 @@ class _WordPageState extends State<WordPage> {
               ),
             ],
             onSelected: (value) {
-              Flushbar(
-                message: "Congratz, you pressed $value",
-                duration: Duration(milliseconds: 1500),
-              )..show(context);
+              if (value == 0) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WebViewWidget(word)),
+                );
+              } else if (value == 1) {
+                Flushbar(
+                  message: "Congratz, you pressed $value",
+                  duration: Duration(milliseconds: 1500),
+                )..show(context);
+              }
               // TODO Google it
               // TODO Report it
             },
