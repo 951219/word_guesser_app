@@ -62,7 +62,7 @@ getGuessingWindow(BuildContext context) async {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       onPressed: isEnabled
           ? () => {
-                if (checkIfCorrect(correctWord, word))
+                if (correctWord.word == word)
                   {
                     Flushbar(
                       message: "Correct! Yay!!!",
@@ -147,14 +147,8 @@ getGuessingWindow(BuildContext context) async {
   );
 }
 
-bool checkIfCorrect(Word correctWord, String word) {
-  if (correctWord.word == word) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 // TODO positioning on the page
 // TODO report brokenBundle()
 // TODO add infobutton to see definitions
+// TODO make it scrollable so longer text heavy words would not break it
+// TODO if no definitions/examples returned, show an error

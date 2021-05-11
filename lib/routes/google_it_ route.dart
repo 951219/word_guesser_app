@@ -8,7 +8,6 @@ class WebViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("test");
     return Scaffold(
       appBar: AppBar(),
       body: WebView(

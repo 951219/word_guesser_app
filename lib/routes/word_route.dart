@@ -2,7 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:word_guesser_app/models/word.dart';
-import 'package:word_guesser_app/routes/webview_route.dart';
+import 'package:word_guesser_app/routes/google_it_%20route.dart';
 
 import '../services/user_services.dart';
 
@@ -92,7 +92,6 @@ class _WordPageState extends State<WordPage> {
                 value: 0,
               ),
               PopupMenuItem(
-                enabled: false,
                 child: Text('Report broken'),
                 value: 1,
               ),
@@ -105,11 +104,10 @@ class _WordPageState extends State<WordPage> {
                 );
               } else if (value == 1) {
                 Flushbar(
-                  message: "Congratz, you pressed $value",
+                  message: "Oops, but this part is not yet implemented",
                   duration: Duration(milliseconds: 1500),
                 )..show(context);
               }
-              // TODO Google it
               // TODO Report it
             },
             icon: Icon(Icons.settings_rounded),
@@ -143,27 +141,42 @@ getBody(BuildContext context, Word word) async {
           SizedBox(
             height: 10,
           ),
-          // TODO if no definitions, show an error
-          Text(
-            'Definitions:',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Container(
+            child: (word.meaning.length > 0)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        Text(
+                          'Definitions:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: _getTextWidgets(word.meaning)),
+                      ])
+                : Text("No definitions found"),
           ),
-          Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: _getTextWidgets(word.meaning)),
           SizedBox(
             height: 20,
           ),
-          // TODO if no examples, show an error
-          Text(
-            'Examples:',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: _getTextWidgets(word.example))
+          Container(
+            child: (word.example.length > 0)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Examples:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: _getTextWidgets(word.example)),
+                    ],
+                  )
+                : Text("No examples found"),
+          )
         ],
       ),
     ),

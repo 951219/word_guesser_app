@@ -149,6 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                         duration: Duration(milliseconds: 1500),
                       )..show(context);
                     } else {
+                      // TODO Error handling, if username already exists.
                       Flushbar(
                         message: "Something went wrong with signing up!",
                         duration: Duration(milliseconds: 1500),
