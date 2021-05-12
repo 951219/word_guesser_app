@@ -143,13 +143,18 @@ class _LoginPageState extends State<LoginPage> {
                     });
                     var result = await signUp(_usernameController.text,
                         _passwordController.text, context);
-                    if (result) {
+                    if (result["status"]) {
                       Flushbar(
                         message: "Account created! You can now log in.",
                         duration: Duration(milliseconds: 1500),
                       )..show(context);
+                    } else if (!result["status"]) {
+                      Flushbar(
+                        message:
+                            "Username ${_usernameController.text} is already taken!",
+                        duration: Duration(milliseconds: 1500),
+                      )..show(context);
                     } else {
-                      // TODO Error handling, if username already exists.
                       Flushbar(
                         message: "Something went wrong with signing up!",
                         duration: Duration(milliseconds: 1500),

@@ -50,7 +50,7 @@ Future<bool> singIn(
   return false;
 }
 
-Future<bool> signUp(
+Future<dynamic> signUp(
     String username, String password, BuildContext context) async {
   String url = "${constants.DOMAIN}/user/signup";
 
@@ -59,12 +59,17 @@ Future<bool> signUp(
   var res = await http.post(url, body: body);
 
   if (res.statusCode == 201) {
-    print("Response status: ${res.statusCode}");
-    print("User created!");
-    return true;
+    String message = "Response status: ${res.statusCode} \n User created!";
+    print(message);
+    return {"status": true, "message": message};
+  } else if (res.statusCode == 409) {
+    String message = "Error: User already exists: ${res.statusCode}";
+    print(message);
+    return {"status": false, "message": message};
   } else {
-    print("Error: Response status: ${res.statusCode}");
-    return false;
+    String message = "Error: Response status: ${res.statusCode}";
+    print(message);
+    return {"status": false, "message": message};
   }
 }
 
@@ -100,6 +105,7 @@ Future<void> logOut(BuildContext context) async {
 
 // checks if refreshToken is valid, it it is then it will return a new accessToken and saves it in sharedprefs
 Future<bool> syncIsLoggedIn() async {
+  // TODO crashes if user is deleted while being logged in.
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   var loggedIn;
   if (sharedPreferences.containsKey("refreshToken") &&
