@@ -42,6 +42,31 @@ fetchWord(String word, BuildContext context) async {
   }
 }
 
+postBroken(int wordId, String word) async {
+  print('postBroken()');
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+  Map body = {"word": word, "wordId": wordId.toString()};
+
+  var url = "${constants.DOMAIN}/est/postbroken";
+  var res = await http.post(
+    url,
+    body: body,
+    headers: {
+      HttpHeaders.authorizationHeader:
+          "Bearer ${sharedPreferences.getString('accessToken')}"
+    },
+  );
+
+  if (res.statusCode == 200) {
+    return true;
+  } else {
+    print(
+        "Error: Response status: ${res.statusCode} \n ${json.decode(res.body)}");
+    return false;
+  }
+}
+
 Future<List<dynamic>> fetchBundle(BuildContext context) async {
   const wordAmount = 4;
 

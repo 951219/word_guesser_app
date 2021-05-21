@@ -2,9 +2,10 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:word_guesser_app/models/word.dart';
-import 'package:word_guesser_app/routes/google_it_%20route.dart';
+import 'package:word_guesser_app/routes/google_it_route.dart';
 
 import '../services/user_services.dart';
+import '../services/word_services.dart';
 
 class WordPage extends StatefulWidget {
   final Word word;
@@ -96,19 +97,26 @@ class _WordPageState extends State<WordPage> {
                 value: 1,
               ),
             ],
-            onSelected: (value) {
+            onSelected: (value) async {
               if (value == 0) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => WebViewWidget(word)),
                 );
               } else if (value == 1) {
+                // TODO Report it
+                // show modal saying that they should only report it if it's broken(incomplete/worng definitions, missing definition or example)
+                var posted = await postBroken(wordId, word);
+
+                var msg = "Thank you!";
+
+                if (!posted) msg = "Something went wrong with reporting";
+
                 Flushbar(
-                  message: "Oops, but this part is not yet implemented",
+                  message: msg,
                   duration: Duration(milliseconds: 1500),
                 )..show(context);
               }
-              // TODO Report it
             },
             icon: Icon(Icons.settings_rounded),
           ),
