@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:word_guesser_app/models/word.dart';
 import 'package:word_guesser_app/routes/google_it_route.dart';
+import 'package:word_guesser_app/constants.dart' as constants;
 
 import '../services/user_services.dart';
 import '../services/word_services.dart';
@@ -104,17 +105,28 @@ class _WordPageState extends State<WordPage> {
                   MaterialPageRoute(builder: (context) => WebViewWidget(word)),
                 );
               } else if (value == 1) {
-                // TODO Report it
-                // show modal saying that they should only report it if it's broken(incomplete/worng definitions, missing definition or example)
-                var posted = await postBroken(wordId, word);
-
-                var msg = "Thank you!";
-
-                if (!posted) msg = "Something went wrong with reporting";
-
+                // TODO close the older flushbar at the same time.
                 Flushbar(
-                  message: msg,
-                  duration: Duration(milliseconds: 1500),
+                  mainButton: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(constants.cyan)),
+                    onPressed: () async {
+                      var reported = await postBroken(wordId, word);
+                      var msg = 'Thank you!';
+                      if (!reported)
+                        msg = 'Something went wrong with reporting!';
+
+                      return Flushbar(
+                        message: msg,
+                        duration: Duration(milliseconds: 1000),
+                      )..show(context);
+                    },
+                    child:
+                        Text('Report!', style: TextStyle(color: Colors.white)),
+                  ),
+                  message: 'Please only report if the word is broken!',
+                  duration: Duration(milliseconds: 3000),
                 )..show(context);
               }
             },
@@ -136,6 +148,8 @@ class _WordPageState extends State<WordPage> {
     );
   }
 }
+
+class Flatbutton {}
 
 getBody(BuildContext context, Word word) async {
   // TODO Single child scrollable view so longer data would not break the view
